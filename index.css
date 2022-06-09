@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&display=swap');
 
+html {
+    overflow: hidden;
+}
+
 body {
     background-color: #0000ff;
     height: 100vh;
@@ -15,8 +19,8 @@ body {
     font-size: 77px;
     font-weight: 500;
     line-height: 69px;
-    overflow: hidden;
     user-select: none;
+    zoom: 1.0;
 }
 
 ::selection {
@@ -29,13 +33,9 @@ li {
 }
 
 .sub {
+    overflow: hidden;
     background-color: #f9f9f9;
     color: #0000ff;
-}
-
-.about {
-    overflow: scroll;
-    height: 100%;
 }
 
 input {
@@ -43,6 +43,10 @@ input {
     width: 10px;
     background: none;
     border: none;
+}
+
+input:selection {
+    background: none;
 }
 
 input:focus {
@@ -82,7 +86,6 @@ br {
 
 #title {
     background-color: transparent;
-    width: 100%;
 }
 
 #menu {
@@ -137,6 +140,10 @@ details > summary {
     color: #0000ff;
     background-color: transparent;
 }
+
+details > summary::-webkit-details-marker {
+    display: none;
+  }
 
 details > summary:focus {
     outline: none;
