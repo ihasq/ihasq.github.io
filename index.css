@@ -2,6 +2,8 @@
 
 html {
     overflow: hidden;
+    transform-origin: top left;
+    transform: scale(1);
 }
 
 body {
@@ -20,7 +22,6 @@ body {
     font-weight: 500;
     line-height: 69px;
     user-select: none;
-    zoom: 1.0;
 }
 
 ::selection {
