@@ -3,7 +3,7 @@
 html {
     overflow: hidden;
     transform-origin: top left;
-    transform: scale(1);
+    transform: scale(0.9);
 }
 
 body {
