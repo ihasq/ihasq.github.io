@@ -1,9 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&display=swap');
 
 html {
-    overflow: hidden;
-    transform-origin: top left;
+    transform-origin: left;
     transform: scale(0.9);
+    overflow: hidden;
 }
 
 body {
