@@ -30,7 +30,7 @@ class ExampleExtension {
   ihasq(){
     return 'Let it go';
   }
-  second(){
+  second(args){
     return args.A === args.B;
   }
 }
