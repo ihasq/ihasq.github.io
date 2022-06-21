@@ -24,6 +24,21 @@ class ExampleExtension {
             }
           }
         }
+        {
+          opcode: 'downloader',
+          blockType: Scratch.BlockType.COMMAND,
+          text: 'Hash [data] as [algorithm]',
+          arguments: {
+            data: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'input'
+            },
+            algorithm: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 'SHA-256'
+            }
+          }
+        }
       ]
     };
   }
@@ -32,6 +47,10 @@ class ExampleExtension {
   }
   second(args){
     return args.A === args.B;
+  }
+  downloader(hash){
+    const digest = crypto.subtle.digest(hash.algorithm, hash.data)
+    return digest;
   }
 }
 
