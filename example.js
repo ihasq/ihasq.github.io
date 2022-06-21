@@ -25,7 +25,7 @@ class ExampleExtension {
           }
         },
         {
-          opcode: 'downloader',
+          opcode: 'Hash',
           blockType: Scratch.BlockType.REPORTER,
           text: 'Hash [data] as [algorithm]',
           arguments: {
@@ -48,10 +48,15 @@ class ExampleExtension {
   second(args){
     return args.A === args.B;
   }
-  downloader(hash){
-    const digest = crypto.subtle.digest(hash.algorithm, hash.data);
-    return digest;
+  Hash(hash){
+    var msgUint8 = new TextEncoder("utf-8").encode(hash.data);
+    crypto.subtle.digest(hash.algorithm, msgUint8).then(
+      function(hashBuffer){
+        var hashArray = Array.from(new Uint8Array(hashBuffer));
+        var hashHex = hashArray.map(function(b){return b.toString(16).padStart(2, '0')}).join('');
+        return resolve(hashHex);
+      }
+    );
   }
 }
-
 Scratch.extensions.register(new ExampleExtension());
