@@ -23,7 +23,7 @@ class ExampleExtension {
               defaultValue: 'Second'
             }
           }
-        }
+        },
         {
           opcode: 'downloader',
           blockType: Scratch.BlockType.COMMAND,
