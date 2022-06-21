@@ -26,7 +26,7 @@ class ExampleExtension {
         },
         {
           opcode: 'downloader',
-          blockType: Scratch.BlockType.COMMAND,
+          blockType: Scratch.BlockType.REPORTER,
           text: 'Hash [data] as [algorithm]',
           arguments: {
             data: {
