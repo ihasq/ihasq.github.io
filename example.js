@@ -25,21 +25,31 @@ class ExampleExtension {
           }
         },
         {
-          opcode: 'Hash',
+          opcode: 'logic',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'Hash [data] as [algorithm]',
+          text: '[A][menu][B]',
           arguments: {
-            data: {
-              type: Scratch.ArgumentType.STRING,
-              defaultValue: 'input'
+            A: {
+              type: 'string',
+              defaultValue: '',
             },
-            algorithm: {
-              type: Scratch.ArgumentType.STRING,
-              defaultValue: 'SHA-256'
+            menu: {
+              type: 'string',
+              menu: 'menu',
+              defaultValue: '>',
+            },
+            B: {
+              type: 'string',
+              defaultValue: '',
             }
           }
         }
-      ]
+      ],
+      menus: {
+        menu: {
+          items: ['=', '≠', '>', '>=', '<', '<='],
+        },
+      }
     };
   }
   ihasq(){
@@ -48,15 +58,20 @@ class ExampleExtension {
   second(args){
     return args.A === args.B;
   }
-  Hash(hash){
-    var msgUint8 = new TextEncoder("utf-8").encode(hash.data);
-    crypto.subtle.digest(hash.algorithm, msgUint8).then(
-      function(hashBuffer){
-        var hashArray = Array.from(new Uint8Array(hashBuffer));
-        var hashHex = hashArray.map(function(b){return b.toString(16).padStart(2, '0')}).join('');
-        return resolve(hashHex);
-      }
-    );
+  logic({A,menu,B}){
+    if(menu==='='){
+      return A===B;
+    } else if(menu==='≠'){
+      return A!==B;
+    } else if(menu==='>'){
+      return A > B;
+    } else if(menu==='>='){
+      return A >= B;
+    } else if(menu==='<'){
+      return A < B;
+    } else if(menu==='<='){
+      return A <= B;
+    }
   }
 }
 Scratch.extensions.register(new ExampleExtension());
