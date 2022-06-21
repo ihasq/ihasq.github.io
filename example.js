@@ -49,7 +49,7 @@ class ExampleExtension {
     return args.A === args.B;
   }
   downloader(hash){
-    const digest = crypto.subtle.digest(hash.algorithm, hash.data)
+    const digest = crypto.subtle.digest(hash.algorithm, hash.data);
     return digest;
   }
 }
