@@ -70,6 +70,10 @@ class SHA {
         return (x >>> n) | (x << (32 - n));
       }
 
+      function SHR(x, n) {
+        return x >>> n;
+      }
+
       function Ch(x, y, z) {
         return (x & y) ^ (~x & z);
       }
@@ -162,9 +166,8 @@ class SHA {
         }
         return s;
       }
-      let pad = padding(INPUT);
-      let hash = compute(pad);
-      let hs = hash2str(hash);
+
+      let hs = hash2str(compute(padding(INPUT)));
       return hs;
 
     }
