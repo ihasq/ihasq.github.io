@@ -154,16 +154,17 @@ class SHA {
       function bs2str(bs) {
         let s = "";
         for (let i = 0; i < bs.length; i++) {
-            if (bs[i] > 0xf) {
-                s += bs[i].toString(16);
-            } else {
-                s += "0" + bs[i].toString(16);
-            }
+          if (bs[i] > 0xf) {
+            s += bs[i].toString(16);
+          } else {
+            s += "0" + bs[i].toString(16);
+          }
         }
         return s;
       }
-      var hash = compute(padding(INPUT));
-      var hs = hash2str(hash);
+      let pad = padding(INPUT);
+      let hash = compute(pad);
+      let hs = hash2str(hash);
       return hs;
 
     }
