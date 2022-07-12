@@ -23,7 +23,7 @@ class TWAM {
         {
           opcode: 'twammeth2',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'pow[INPUT1][INPUT2]',
+          text: '[INPUT1]^[INPUT2]',
           arguments: {
             INPUT1: {
               type: Scratch.ArgumentType.NUMBER,
