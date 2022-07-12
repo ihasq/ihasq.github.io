@@ -7,7 +7,7 @@ class TWAM {
         {
           opcode: 'twammeth1',
           blockType: Scratch.BlockType.REPORTER,
-          text: '[METHOD][INPUT1]',
+          text: '[METHOD][INPUT]',
           arguments: {
             METHOD: {
               type: Scratch.ArgumentType.STRING,
@@ -97,6 +97,9 @@ class TWAM {
   }
   twammeth2({INPUT1, INPUT2}) {
     return Math.pow(INPUT1, INPUT2);
+  }
+  twampi() {
+    return Math.PI;
   }
 }
 Scratch.extensions.register(new TWAM());
