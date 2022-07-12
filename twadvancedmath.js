@@ -2,7 +2,7 @@ class TWAM {
   getInfo() {
     return {
       id: 'turbowarpadvancedmath',
-      name: 'Advanced Math Reporters',
+      name: 'Advanced Math',
       blocks: [
         {
           opcode: 'twammeth1',
@@ -16,7 +16,7 @@ class TWAM {
             },
             INPUT: {
               type: Scratch.ArgumentType.NUMBER,
-              defaultValue: 3,
+              defaultValue: 3
             }
           }
         },
@@ -27,11 +27,41 @@ class TWAM {
           arguments: {
             INPUT1: {
               type: Scratch.ArgumentType.NUMBER,
-              defaultValue: 3,
+              defaultValue: 3
             },
             INPUT2: {
               type: Scratch.ArgumentType.NUMBER,
-              defaultValue: 2,
+              defaultValue: 2
+            }
+          }
+        },
+        {
+          opcode: 'twambase',
+          blockType: Scratch.BlockType.REPORTER,
+          text: '[INPUT] base[BASE1]to[BASE2]',
+          arguments: {
+            INPUT: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 3
+            },
+            BASE1: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 10
+            },
+            BASE2: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 2
+            }
+          }
+        },
+        {
+          opcode: 'twamjudge',
+          blockType: Scratch.BlockType.BOOLEAN,
+          text: '[INPUT] is prime',
+          arguments: {
+            INPUT: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 2
             }
           }
         },
@@ -60,7 +90,7 @@ class TWAM {
             'sign',
             'trunc'
           ]
-        }
+        },
       }
     };
   }
@@ -100,6 +130,21 @@ class TWAM {
   }
   twampi() {
     return Math.PI;
+  }
+  twambase({INPUT, BASE1, BASE2}) {
+    return parseInt(INPUT, BASE1).toString(BASE2);
+  }
+  twamjudge({INPUT}) {
+    if(INPUT <= 2 || INPUT %2 == 0) {
+      return false;
+    }
+    let num = Math.sqrt(INPUT);
+    for(var i = 3; i <=num; i += 2) {
+      if (INPUT % i == 0) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 Scratch.extensions.register(new TWAM());
