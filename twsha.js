@@ -19,6 +19,17 @@ class SHA {
               defaultValue: 'Hello, world!'
             }
           }
+        },
+        {
+          opcode: 'calcreportertest',
+          blockType: Scratch.BlockType.REPORTER,
+          text: 'SHA-2 [VAR]',
+          arguments: {
+            VAR: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: '123'
+            }
+          }
         }
       ],
       menus: {
@@ -29,6 +40,11 @@ class SHA {
       }
     };
   }
+  calcreportertest(msg) {
+    const num = msg.VAR*65536;
+    return num;
+  }
+
   sha2(msg) {
 
     if (msg.ALGORITHM==="256"){
