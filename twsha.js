@@ -29,9 +29,9 @@ class SHA {
       }
     };
   }
-  sha2({ALGORITHM, INPUT}) {
+  sha2(msg) {
 
-    if (ALGORITHM==="256"){
+    if (msg.ALGORITHM==="256"){
 
       const H0 = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
 
@@ -166,8 +166,8 @@ class SHA {
         }
         return s;
       }
-
-      let hs = hash2str(compute(padding(INPUT)));
+      let input = msg.INPUT;
+      let hs = hash2str(compute(padding(input)));
       return hs;
 
     }
