@@ -71,9 +71,6 @@ class TWAM {
           }
         },
         {
-          opcode: 'twam'
-        },
-        {
           opcode: 'twampi',
           blockType: Scratch.BlockType.REPORTER,
           text: '[VAR]',
