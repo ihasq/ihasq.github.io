@@ -23,11 +23,16 @@ class TWAM {
         {
           opcode: 'twammeth2',
           blockType: Scratch.BlockType.REPORTER,
-          text: '[INPUT1]^[INPUT2]',
+          text: '[INPUT1][POW][INPUT2]',
           arguments: {
             INPUT1: {
               type: Scratch.ArgumentType.NUMBER,
               defaultValue: 3
+            },
+            POW: {
+              type: Scratch.ArgumentType.STRING,
+              menu: "pows",
+              defaultValue: '^'
             },
             INPUT2: {
               type: Scratch.ArgumentType.NUMBER,
@@ -86,11 +91,20 @@ class TWAM {
             'clz32',
             'expm1',
             'fround',
+            'hypot',
             'log1p',
             'sign',
             'trunc'
           ]
         },
+        pows: {
+          acceptReporters: true,
+          items: [
+            '^',
+            '√',
+            'log',
+          ]
+        }
       }
     };
   }
@@ -125,8 +139,14 @@ class TWAM {
       return Math.trunc(INPUT);
     }
   }
-  twammeth2({INPUT1, INPUT2}) {
-    return Math.pow(INPUT1, INPUT2);
+  twammeth2({INPUT1, POW, INPUT2}) {
+    if(POW==="^") {
+      return Math.pow(INPUT1, INPUT2)
+    } else if(POW==="√") {
+      return Math.pow(INPUT1, 1/INPUT2)
+    } else if(POW==="log") {
+      return Math.log(INPUT1, INPUT2)
+    }
   }
   twampi() {
     return Math.PI;
