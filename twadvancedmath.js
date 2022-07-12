@@ -169,7 +169,7 @@ class TWAM {
       return Math.log(INPUT1, INPUT2)
     }
   }
-  twampi(VAR) { 
+  twampi({VAR}) { 
     if(VAR==="π") {
       return Math.PI;
     } else if(VAR==="∞") {
