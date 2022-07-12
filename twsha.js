@@ -162,12 +162,11 @@ class SHA {
         }
         return s;
       }
+      var hash = compute(padding(INPUT));
+      var hs = hash2str(hash);
+      return hs;
 
     }
-    
-    let hash = compute(padding(INPUT));
-    let hs = hash2str(hash);
-    return hs;
 
   }
   
