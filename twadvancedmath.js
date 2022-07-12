@@ -71,9 +71,19 @@ class TWAM {
           }
         },
         {
+          opcode: 'twam'
+        },
+        {
           opcode: 'twampi',
           blockType: Scratch.BlockType.REPORTER,
-          text: 'π',
+          text: '[VAR]',
+          arguments: {
+            VAR: {
+              type: Scratch.ArgumentType.STRING,
+              menu: "var",
+              defaultValue: "π"
+            }
+          }
         }
       ],
       menus: {
@@ -103,6 +113,20 @@ class TWAM {
             '^',
             '√',
             'log',
+          ]
+        },
+        var: {
+          acceptReporters: true,
+          items: [
+            'π',
+            '∞',
+            'e',
+            'ln2',
+            'ln10',
+            'log2e',
+            'log10e',
+            'sqrt2',
+            'sqrt1_2'
           ]
         }
       }
@@ -148,8 +172,26 @@ class TWAM {
       return Math.log(INPUT1, INPUT2)
     }
   }
-  twampi() {
-    return Math.PI;
+  twampi() { 
+    if(VAR==="π") {
+      return Math.PI;
+    } else if(VAR==="∞") {
+      return Infinity;
+    } else if(VAR==="e") {
+      return Math.E;
+    } else if(VAR==="ln2") {
+      return Math.LN2;
+    } else if(VAR==="ln10") {
+      return Math.LN10;
+    } else if(VAR==="log2e") {
+      return Math.LOG2E;
+    } else if(VAR==="log10e") {
+      return Math.LOG10E;
+    } else if(VAR==="sqrt2") {
+      return Math.SQRT2;
+    } else if(VAR==="sqrt1_2") {
+      return Math.SQRT1_2;
+    }
   }
   twambase({INPUT, BASE1, BASE2}) {
     return parseInt(INPUT, BASE1).toString(BASE2);
