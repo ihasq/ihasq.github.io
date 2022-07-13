@@ -126,6 +126,13 @@ class TWAM {
             'sqrt1_2'
           ]
         }
+      },
+      translation_map: {
+        ja: {
+          'name': '高度な演算',
+          'twambase': '[BASE1]進数の[INPUT]を[BASE2]進数化',
+          'twamjudge': '[INPUT] は素数'
+        }
       }
     };
   }
