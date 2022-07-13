@@ -63,12 +63,7 @@ class TWAM {
           opcode: 'twamjudge',
           blockType: Scratch.BlockType.BOOLEAN,
           text: '[INPUT] is prime',
-          arguments: {
-            INPUT: {
-              type: Scratch.ArgumentType.NUMBER,
-              defaultValue: 2
-            }
-          }
+          
         },
         {
           opcode: 'twampi',
@@ -79,6 +74,39 @@ class TWAM {
               type: Scratch.ArgumentType.STRING,
               menu: "var",
               defaultValue: "π"
+            }
+          }
+        },
+        {
+          opcode: 'twamvar',
+          blockType: Scratch.BlockType.REPORTER,
+          text: '[VAR]',
+          arguments: {
+            VAR: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 3
+            }
+          }
+        },
+        {
+          opcode: 'twamangle',
+          blockType: Scratch.BlockType.REPORTER,
+          text: '[VAR]',
+          arguments: {
+            VAR: {
+              type: Scratch.ArgumentType.ANGLE,
+              defaultValue: 90
+            }
+          }
+        },
+        {
+          opcode: 'twamcolor',
+          blockType: Scratch.BlockType.REPORTER,
+          text: '[VAR]',
+          arguments: {
+            VAR: {
+              type: Scratch.ArgumentType.COLOR,
+              defaultValue: "#ff00ff"
             }
           }
         }
@@ -199,6 +227,15 @@ class TWAM {
     } else if(VAR==="last modified date") {
       return "2022-07-13 09:25:45";
     }
+  }
+  twamvar({VAR}) {
+    return VAR;
+  }
+  twamangle({VAR}) {
+    return VAR;
+  }
+  twamcolor({VAR}) {
+    return VAR;
   }
   twambase({INPUT, BASE1, BASE2}) {
     return parseInt(INPUT, BASE1).toString(BASE2);
