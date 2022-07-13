@@ -204,7 +204,7 @@ class TWAM {
     return parseInt(INPUT, BASE1).toString(BASE2);
   }
   twamjudge({INPUT}) {
-    if(INPUT <= 2 || INPUT %2 == 0) {
+    if(INPUT < 2 || INPUT %2 == 0 && INPUT != 2) {
       return false;
     }
     let num = Math.sqrt(INPUT);
