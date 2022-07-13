@@ -123,7 +123,8 @@ class TWAM {
             'log2e',
             'log10e',
             'sqrt2',
-            'sqrt1_2'
+            'sqrt1_2',
+            'last modified date'
           ]
         }
       },
@@ -195,6 +196,8 @@ class TWAM {
       return Math.SQRT2;
     } else if(VAR==="sqrt1_2") {
       return Math.SQRT1_2;
+    } else if(VAR==="last modified date") {
+      return "2022-07-13 09:25:45";
     }
   }
   twambase({INPUT, BASE1, BASE2}) {
