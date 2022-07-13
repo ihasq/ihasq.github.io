@@ -2,7 +2,7 @@ class TWAM {
   getInfo() {
     return {
       id: 'turbowarpadvancedmath',
-      name: 'Advanced Math',
+      name: 'Advanced Operator',
       blocks: [
         {
           opcode: 'twammeth1',
