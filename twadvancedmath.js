@@ -63,7 +63,12 @@ class TWAM {
           opcode: 'twamjudge',
           blockType: Scratch.BlockType.BOOLEAN,
           text: '[INPUT] is prime',
-          
+          arguments: {
+            VAR: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 2
+            }
+          }
         },
         {
           opcode: 'twampi',
