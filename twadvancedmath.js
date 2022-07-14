@@ -64,7 +64,7 @@ class TWAM {
           blockType: Scratch.BlockType.BOOLEAN,
           text: '[INPUT] is prime',
           arguments: {
-            VAR: {
+            INPUT: {
               type: Scratch.ArgumentType.NUMBER,
               defaultValue: 2
             }
