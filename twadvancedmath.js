@@ -71,6 +71,21 @@ class TWAM {
           }
         },
         {
+          opcode: 'twamfill',
+          blockType: Scratch.BlockType.BOOLEAN,
+          text: 'fill [INPUT] up to [DIGIT] digits',
+          arguments: {
+            INPUT: {
+              type: Scratch.ArgumentType.STRING,
+              defaultValue: 2
+            },
+            DIGIT: {
+              type: Scratch.ArgumentType.NUMBER,
+              defaultValue: 16
+            }
+          }
+        },
+        {
           opcode: 'twampi',
           blockType: Scratch.BlockType.REPORTER,
           text: '[VAR]',
@@ -232,6 +247,9 @@ class TWAM {
     } else if(VAR==="last modified date") {
       return "2022-07-13 09:25:45";
     }
+  }
+  twamfill({INPUT, DIGIT}) {
+    return ( Array(DIGIT).join('0') + INPUT ).slice( -DIGIT );
   }
   twamvar({VAR}) {
     return VAR;
