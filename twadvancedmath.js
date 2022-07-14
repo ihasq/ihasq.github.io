@@ -72,7 +72,7 @@ class TWAM {
         },
         {
           opcode: 'twamfill',
-          blockType: Scratch.BlockType.BOOLEAN,
+          blockType: Scratch.BlockType.REPORTER,
           text: 'fill [INPUT] up to [DIGIT] digits',
           arguments: {
             INPUT: {
