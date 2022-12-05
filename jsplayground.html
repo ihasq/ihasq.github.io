@@ -25,7 +25,7 @@
       padding: 0;
       background-color: #333;
       color: #fff;
-    ">console.log('Non-util JS Playground by ihasq') // Press Ctrl + Enter to execute</textarea>
+    "></textarea>
     <ul id="out" style="
       padding-left: 0;
       width: 100%;
@@ -38,19 +38,39 @@
       background-color: #111;
       color: #fff;
     "></ul>
+    <a id="dlHandler" download hidden></a>
     <script>
       let out = document.querySelector('#out');
       let log = console.log;
+      let warn = console.warn;
+      let error = console.error;
+      let info = console.info;
       console.log = (...args) => {
         log(...args);
-        const li = document.createElement('li');
-        li.innerText = args[0];
-        li.style = "list-style: none; margin: 0;"
+        consoleAlt(...args, "#fff");
+      };
+      console.warn = (...args) => {
+        warn(...args);
+        consoleAlt(...args, "#ff0");
+      };
+      console.error = (...args) => {
+        error(...args);
+        consoleAlt(...args, "#f00");
+      };
+      console.info = (...args) => {
+        info(...args);
+        consoleAlt(...args, "#0ff");
+      };
+      let consoleAlt = (args, color) => {
+        let li = document.createElement('li');
+        li.innerText = args;
+        li.style = `list-style: none; margin: 0; color: ${color};`
         out.appendChild(li);
         out.scrollTo(0, out.scrollHeight);
-      };
+      }
       // textArea
       let textArea = document.querySelector('textarea#tabEnabled');
+      textArea.textContent = "// Ctrl+Enter to execute, Ctrl+S to download as JS file\nconsole.log('Non-util JS Playground by ihasq')"
       let keyPressList = [
         {key: 50, input: "\42"}, //"
         {key: 56, input: "\50"}, //(
@@ -70,9 +90,19 @@
           return false;
         }
       });
+      let dlHandler = document.querySelector("a#dlHandler")
       document.addEventListener('keydown', event => {
-        if(event.ctrlKey && event.keyCode == 13) {
-          new Function(textArea.value)()
+        if(event.ctrlKey) {
+          if(event.keyCode == 13) {
+            new Function(textArea.textContent)()
+          } else if(event.keyCode == 83) {
+            event.preventDefault();
+            let jsBlob = new Blob([textArea.textContent], {type: 'text/javascript'});
+            dlHandler.setAttribute("download", "jsplayground.js")
+            dlHandler.setAttribute("href", URL.createObjectURL(jsBlob))
+            dlHandler.click();
+            return false;
+          };
         };
       },false);
     </script>
