@@ -1,0 +1,69 @@
+<!-- Non-util JS Playground by ihasq (https://github.com/ihasq) -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Non-util JS Playground</title>
+    <meta charset="utf-8">
+    <link rel="favicon" type="image/x-icon" href="https://avatars.githubusercontent.com/u/91711202?v=4">
+  </head>
+  <body style="
+    margin:0;
+    height:100vh;
+    width: 100%;
+    box-sizing: content-box;
+    display: flex;
+    flex-direction: column;
+  ">
+    <textarea id="tabEnabled" style="
+      font-family: monospace;
+      resize: none;
+      tab-size: 2;
+      font-size: 20px;
+      width: 100%;
+      height: 70%;
+      border: none;
+      padding: 0;
+      background-color: #333;
+      color: #fff;
+    ">console.log('Non-util JS Playground by ihasq') // Press Ctrl + Enter to execute</textarea>
+    <ul id="out" style="padding-left: 0; width: 100%; height: 30%; margin: 0; overflow-y: auto;"></ul>
+    <script>
+      const out = document.getElementById('out');
+      const log = console.log;
+      console.log = (...args) => {
+        log(...args);
+        const li = document.createElement('li');
+        li.innerText = args[0];
+        li.style = "list-style: none; margin: 0; font-size: 20px; font-family: monospace;"
+        document.getElementById('out').appendChild(li);
+        out.scrollTo(0, out.scrollHeight);
+      };
+      // textArea
+      let textArea = document.querySelector('textarea#tabEnabled');
+      let keyPressList = [
+        {key: 50, input: "\42"}, //"
+        {key: 56, input: "\50"}, //(
+      ];
+      textArea.addEventListener('keydown', e => {
+        var elem, end, start, value;
+        if (e.keyCode === 9) {
+          if (e.preventDefault) {
+            e.preventDefault();
+          };
+          elem = e.target;
+          start = elem.selectionStart;
+          end = elem.selectionEnd;
+          value = elem.value;
+          elem.value = "" + (value.substring(0, start)) + "\t" + (value.substring(end));
+          elem.selectionStart = elem.selectionEnd = start + 1;
+          return false;
+        }
+      });
+      document.addEventListener('keydown', event => {
+        if(event.ctrlKey && event.keyCode == 13) {
+          new Function(textArea.value)()
+        };
+      },false);
+    </script>
+  </body>
+</html>
