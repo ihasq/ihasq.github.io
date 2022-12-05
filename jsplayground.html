@@ -26,7 +26,18 @@
       background-color: #333;
       color: #fff;
     ">console.log('Non-util JS Playground by ihasq') // Press Ctrl + Enter to execute</textarea>
-    <ul id="out" style="padding-left: 0; width: 100%; height: 30%; margin: 0; overflow-y: auto;"></ul>
+    <ul id="out" style="
+      padding-left: 0;
+      width: 100%;
+      height: 30%;
+      margin: 0;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 20px;
+      border: none;
+      background-color: #111;
+      color: #fff;
+    "></ul>
     <script>
       const out = document.getElementById('out');
       const log = console.log;
@@ -34,7 +45,7 @@
         log(...args);
         const li = document.createElement('li');
         li.innerText = args[0];
-        li.style = "list-style: none; margin: 0; font-size: 20px; font-family: monospace;"
+        li.style = "list-style: none; margin: 0;"
         document.getElementById('out').appendChild(li);
         out.scrollTo(0, out.scrollHeight);
       };
