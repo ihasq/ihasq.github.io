@@ -39,14 +39,14 @@
       color: #fff;
     "></ul>
     <script>
-      const out = document.getElementById('out');
-      const log = console.log;
+      let out = document.querySelector('#out');
+      let log = console.log;
       console.log = (...args) => {
         log(...args);
         const li = document.createElement('li');
         li.innerText = args[0];
         li.style = "list-style: none; margin: 0;"
-        document.getElementById('out').appendChild(li);
+        out.appendChild(li);
         out.scrollTo(0, out.scrollHeight);
       };
       // textArea
