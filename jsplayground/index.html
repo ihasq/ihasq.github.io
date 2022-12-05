@@ -6,6 +6,11 @@
     <meta charset="utf-8">
     <link rel="shortcut icon" type="image/x-icon" href="https://pbs.twimg.com/profile_images/1579137896556044290/9ujkmjFL_400x400.jpg">
     <link rel="manifest" href="manifest.json">
+    <script>
+      if('serviceWorker' in navigator){
+	      navigator.serviceWorker.register('/sw.js')
+	    };
+    </script>
   </head>
   <body style="
     margin:0;
