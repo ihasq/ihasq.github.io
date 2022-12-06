@@ -1,8 +1,9 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "name": "Non-util JS Playground by ihasq",
+  "Scope": "/jsplayground",
   "short_name": "jsplayground",
-  "start_url": ".",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#111",
   "description": "JavaScript Playground",
