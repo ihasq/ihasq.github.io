@@ -1,9 +1,9 @@
 {
   "name": "Non-util JS Playground by ihasq",
-  "Scope": "/jsplayground",
+  "scope": "/jsplayground/",
   "short_name": "jsplayground",
   "start_url": "https://ihasq.github.io/jsplayground/index.html",
-  "display": "standalone",
+  "display": "fullscreen",
   "theme_color": "#101010",
   "background_color": "#101010",
   "description": "JavaScript Playground",
