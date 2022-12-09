@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Minimal Cryptographically Secure Password Generator</title>
+    <meta charset="utf-8">
+  </head>
+  <body style="padding: 5px;">
+    <h1>Minimal Cryptographically Secure Password Generator</h1>
+    <h3>Enter to generate and copy</h3>
+    <label>length<input type="number" id="length" placeholder="length" value="64"></label><br>
+    <h2 id="pass"></h2>
+    <script type="text/javascript">
+      window.addEventListener('keydown', e => {
+        if (e.keyCode === 13) {
+          if (e.preventDefault) {e.preventDefault();};
+          generatePass(document.getElementById('length').value);
+          return false;
+        }
+      });
+      var generatePass = length => {
+        var arr = new Uint8Array(length);
+        crypto.getRandomValues(arr);
+        var str = new String;
+        Array.from(arr, v => (v % 93)).forEach(e => str = `${str}${String.fromCharCode(e + 33)}`);
+        document.querySelector("h2#pass").textContent = str;
+        navigator.clipboard.writeText(str).then(() => {}, () => {});
+      };
+    </script>
+  </body>
+</html>
