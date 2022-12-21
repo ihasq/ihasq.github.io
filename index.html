@@ -78,7 +78,7 @@
     <header>@ihasq's website</br></header><br>
     <div id="wrapper"></div>
     <script>
-      const pages = new Array;
+      var pages = new Array;
       document.querySelectorAll("template").forEach(data => pages.push({name: data.id, elements: data.innerHTML}));
       const cryptoAddress = [
         {name: "$BTC", address: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk"},
@@ -88,28 +88,30 @@
       ]
       window.addEventListener("click",()=>{
         var hover = document.querySelector("a:hover")
-        if(hover.id == "goto"){
-          document.querySelector("header").innerText = `@ihasq's website > ${hover.innerText}\n`
-          pages.forEach(e => {
-            if(e.name == hover.innerText.toLowerCase()){
-              document.querySelector("div#wrapper").innerHTML = e.elements;
-            }
-          });
-        } else if(hover.id == "back"){
-          document.querySelector("header").innerText = `@ihasq's website`
-          goHome();
-        } else if(hover.id == "copy"){
-          if(hover.innerText.charAt(0) == "$"){
-            cryptoAddress.forEach(e => {
-              if(e.name == hover.innerText){
-                navigator.clipboard.writeText(e.address)
-                document.querySelector("label#address").innerText = `Copied address: ${e.address}`
+        try {
+          if(hover.id == "goto"){
+            document.querySelector("header").innerText = `@ihasq's website > ${hover.innerText}\n`
+            pages.forEach(e => {
+              if(e.name == hover.innerText.toLowerCase()){
+                document.querySelector("div#wrapper").innerHTML = e.elements;
               }
-            })
-          } else if(hover.innerText.charAt(0) == "N"){
-            navigator.clipboard.writeText("npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc");
+            });
+          } else if(hover.id == "back"){
+            document.querySelector("header").innerText = `@ihasq's website`
+            goHome();
+          } else if(hover.id == "copy"){
+            if(hover.innerText.charAt(0) == "$"){
+              cryptoAddress.forEach(e => {
+                if(e.name == hover.innerText){
+                  navigator.clipboard.writeText(e.address)
+                  document.querySelector("label#address").innerText = `Copied address: ${e.address}`
+                }
+              })
+            } else if(hover.innerText.charAt(0) == "N"){
+              navigator.clipboard.writeText("npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc");
+            }
           }
-        }
+        } catch {}
       },false);
       const goHome = () => {
         document.querySelector("div#wrapper").innerHTML=document.querySelector("template#home").innerHTML;
