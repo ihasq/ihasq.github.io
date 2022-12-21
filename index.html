@@ -1,38 +1,103 @@
 <!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <meta name="description" content="ihasq - a japanese programmer, a student, an internet citizen." />
-        <meta name="twitter:card" content="Summary with Large Image" />
-        <meta name="twitter:site" content="@ihasq" />
-        <meta property="og:url" content="ihasq.com" />
-        <meta property="og:title" content="ihasq's website" />
-        <meta property="og:type" content="website">
-        <meta property="og:description" content="ihasq - a japanese programmer, a student, an internet citizen." />
-        <meta property="og:image" content="https://www.colordic.org/image/0000ff.png" />
-        <meta property="og:site_name" content="ihasq`s website" />
-        <meta property="og:locale" content="ja_JP" />
-        <link rel="stylesheet" href="index.css">
-        <link rel="icon" href="https://pbs.twimg.com/profile_images/1429065311425204227/AcWLSE15_400x400.jpg">
-        <link rel="apple-touch-icon" href="https://pbs.twimg.com/profile_images/1429065311425204227/AcWLSE15_400x400.jpg">
-        <title>ihasq</title>
-    </head>
-    <body style="visibility:hidden" onLoad="document.body.style.visibility='visible'" oncontextmenu="return false;">
-        <div id="home">
-            <div id="title">
-                @ihasq's<br>
-                website
-            </div>
-            <div id="menu">
-                <div class="divlink">Project<a class="alink" href="./project.html"></a></div><br>
-                <div class="divlink">Twitter<a class="alink" href="https://twitter.com/ihasq"></a></div><br>
-                <div class="divlink">GitHub<a class="alink" href="https://github.com/ihasq"></a></div><br>
-                <div class="divlink">Reddit<a class="alink" href="https://www.reddit.com/user/ihasq"></a></div><br>
-                <div class="divlink">Paper<a class="alink" href="./paper.html"></a></div><br>
-                <div class="divlink">Donate<a class="alink" href="./donate.html"></a></div><br>
-            </div>
-        </div>
-    </body>
+<html>
+  <head>
+    <title>about ihasq</title>
+    <meta charset='utf-8'>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+      body {
+        font-family: 'IBM Plex Mono', monospace;
+        background-color:#22f;
+        color:#fff;
+        cursor: default;
+        margin-left: 2%;
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+      a {
+        font-size: 20px;
+        color: #fff;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      div#wrapper {
+        text-decoration: none;
+        cursor: normal;
+      }
+      ::selection {
+        background-color: #000;
+      }
+      br::selection {
+        background: none;
+      }
+    </style>
+    <template id="home">
+      <a href="https://github.com/ihasq">GitHub</a></br>
+      <a id="goto">Projects</a></br>
+      <a id="goto">Socials</a></br>
+      <a id="goto">Donate</a></br>
+    </template>
+    <template id="projects">
+      <a href="https://ihasq.github.io/getrandompass/">Secure Password Generator</a></br>
+      <a href="https://ihasq.github.io/countclipboard/">Clipboard String Length Counter</a></br>
+      </br>
+      <a id="back">back</a></br>
+    </template>
+    <template id="socials">
+      <a href="https://twitter.com/ihasq">Twitter</a></br>
+      <a id="copy">Nostr (copy pubkey)</a></br>
+      </br>
+      <a id="back">back</a></br>
+    </template>
+    <template id="donate">
+      <label id="address">Copied address: None</label></br>
+      </br>
+      <a id="copy">$BTC</a></br>
+      <a id="copy">$ETH</a></br>
+      <a id="copy">$LTC</a></br>
+      <a id="copy">$XRP</a></br>
+      </br>
+      <a id="back">back</a></br>
+    </template>
+  </head>
+  <body>
+    <h1>@ihasq's website</br></h1>
+    <div id="wrapper"></div>
+    <script>
+      const cryptoAddress = [
+        {name: "$BTC", address: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk"},
+        {name: "$ETH", address: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD"},
+        {name: "$LTC", address: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7"},
+        {name: "$XRP", address: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"}
+      ]
+      window.addEventListener("click",()=>{
+        var hover = document.querySelector("a:hover")
+        if(hover.id == "goto"){
+          document.querySelector("h1").innerText = `@ihasq's website > ${hover.innerText}\n`
+          document.querySelector("div#wrapper").innerHTML = document.querySelector(`template#${hover.innerText.toLowerCase()}`).innerHTML;
+        } else if(hover.id == "back"){
+          document.querySelector("h1").innerText = `@ihasq's website`
+          goHome();
+        } else if(hover.id == "copy"){
+          if(hover.innerText.charAt[0] == "$"){
+            cryptoAddress.forEach(e => {
+              if(e.name == hover.innerText){
+                navigator.clipboard.writeText(e.address)
+                document.querySelector("label#address").innerText = `Copied address: ${e.address}`
+              }
+            })
+          } else if(hover.innerText.charAt[0] == "N"){
+            navigator.clipboard.writeText("npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc");
+          }
+        }
+      },false);
+      const goHome = () => {
+        document.querySelector("div#wrapper").innerHTML=document.querySelector("template#home").innerHTML;
+      };
+      goHome();
+    </script>
+  </body>
 </html>
