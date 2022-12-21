@@ -18,12 +18,15 @@
         background-color:#22f;
         color:#fff;
         cursor: default;
-        margin-left: 2%;
-        margin-top: 0px;
+        margin-left: 6vw;
+        margin-top: 30vh;
         margin-bottom: 0px;
       }
+      header {
+        font-size: 30px;
+      }
       a {
-        font-size: 20px;
+        font-size: 30px;
         color: #fff;
         text-decoration: none;
       }
@@ -72,9 +75,11 @@
     </template>
   </head>
   <body>
-    <h1>@ihasq's website</br></h1>
+    <header>@ihasq's website</br></header><br>
     <div id="wrapper"></div>
     <script>
+      const pages = new Array;
+      document.querySelectorAll("template").forEach(data => pages.push({name: data.id, elements: data.innerHTML}));
       const cryptoAddress = [
         {name: "$BTC", address: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk"},
         {name: "$ETH", address: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD"},
@@ -84,10 +89,14 @@
       window.addEventListener("click",()=>{
         var hover = document.querySelector("a:hover")
         if(hover.id == "goto"){
-          document.querySelector("h1").innerText = `@ihasq's website > ${hover.innerText}\n`
-          document.querySelector("div#wrapper").innerHTML = document.querySelector(`template#${hover.innerText.toLowerCase()}`).innerHTML;
+          document.querySelector("header").innerText = `@ihasq's website > ${hover.innerText}\n`
+          pages.forEach(e => {
+            if(e.name == hover.innerText.toLowerCase()){
+              document.querySelector("div#wrapper").innerHTML = e.elements;
+            }
+          });
         } else if(hover.id == "back"){
-          document.querySelector("h1").innerText = `@ihasq's website`
+          document.querySelector("header").innerText = `@ihasq's website`
           goHome();
         } else if(hover.id == "copy"){
           if(hover.innerText.charAt(0) == "$"){
