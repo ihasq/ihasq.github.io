@@ -77,8 +77,7 @@
   <body>
     <header>@ihasq's website</br></header><br>
     <div id="wrapper"></div>
-    <script>
-      fetch("./script.gz").then(res => res.blob()).then(data => new Response(data.stream().pipeThrough(new DecompressionStream("gzip"))).text()).then(script => new Function(script)())
+    <script src="data:text/javascript;base64,ZmV0Y2goIi4vc2NyaXB0Lmd6IikudGhlbihyZXMgPT4gcmVzLmJsb2IoKSkudGhlbihkYXRhID0+IG5ldyBSZXNwb25zZShkYXRhLnN0cmVhbSgpLnBpcGVUaHJvdWdoKG5ldyBEZWNvbXByZXNzaW9uU3RyZWFtKCJnemlwIikpKS50ZXh0KCkpLnRoZW4oc2NyaXB0ID0+IG5ldyBGdW5jdGlvbihzY3JpcHQpKCkp">
     </script>
   </body>
 </html>
