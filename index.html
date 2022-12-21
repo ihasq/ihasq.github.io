@@ -45,39 +45,10 @@
         background: none;
       }
     </style>
-    <template id="home">
-      <a href="https://github.com/ihasq">GitHub</a></br>
-      <a id="goto">Projects</a></br>
-      <a id="goto">Socials</a></br>
-      <a id="goto">Donate</a></br>
-    </template>
-    <template id="projects">
-      <a href="https://ihasq.github.io/getrandompass/">Secure Password Generator</a></br>
-      <a href="https://ihasq.github.io/countclipboard/">Clipboard String Length Counter</a></br>
-      </br>
-      <a id="back">back</a></br>
-    </template>
-    <template id="socials">
-      <a href="https://twitter.com/ihasq">Twitter</a></br>
-      <a id="copy">Nostr (copy pubkey)</a></br>
-      </br>
-      <a id="back">back</a></br>
-    </template>
-    <template id="donate">
-      <label id="address">Copied address: None</label></br>
-      </br>
-      <a id="copy">$BTC</a></br>
-      <a id="copy">$ETH</a></br>
-      <a id="copy">$LTC</a></br>
-      <a id="copy">$XRP</a></br>
-      </br>
-      <a id="back">back</a></br>
-    </template>
   </head>
   <body>
     <header>@ihasq's website</br></header><br>
     <div id="wrapper"></div>
-    <script src="data:text/javascript;base64,ZmV0Y2goIi4vc2NyaXB0Lmd6IikudGhlbihyZXMgPT4gcmVzLmJsb2IoKSkudGhlbihkYXRhID0+IG5ldyBSZXNwb25zZShkYXRhLnN0cmVhbSgpLnBpcGVUaHJvdWdoKG5ldyBEZWNvbXByZXNzaW9uU3RyZWFtKCJnemlwIikpKS50ZXh0KCkpLnRoZW4oc2NyaXB0ID0+IG5ldyBGdW5jdGlvbihzY3JpcHQpKCkp">
-    </script>
+    <script>fetch("./script.gz").then(res => res.blob()).then(data => new Response(data.stream().pipeThrough(new DecompressionStream("gzip"))).text()).then(script => new Function(script)())</script>
   </body>
 </html>
