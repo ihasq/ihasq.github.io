@@ -82,14 +82,14 @@
           document.querySelector("h1").innerText = `@ihasq's website`
           goHome();
         } else if(hover.id == "copy"){
-          if(hover.innerText.charAt[0] == "$"){
+          if(hover.innerText.charAt(0) == "$"){
             cryptoAddress.forEach(e => {
               if(e.name == hover.innerText){
                 navigator.clipboard.writeText(e.address)
                 document.querySelector("label#address").innerText = `Copied address: ${e.address}`
               }
             })
-          } else if(hover.innerText.charAt[0] == "N"){
+          } else if(hover.innerText.charAt(0) == "N"){
             navigator.clipboard.writeText("npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc");
           }
         }
