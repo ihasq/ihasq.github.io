@@ -66,38 +66,6 @@
   <body>
     <h1>@ihasq's website</br></h1>
     <div id="wrapper"></div>
-    <script>
-      const cryptoAddress = [
-        {name: "$BTC", address: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk"},
-        {name: "$ETH", address: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD"},
-        {name: "$LTC", address: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7"},
-        {name: "$XRP", address: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"}
-      ]
-      window.addEventListener("click",()=>{
-        var hover = document.querySelector("a:hover")
-        if(hover.id == "goto"){
-          document.querySelector("h1").innerText = `@ihasq's website > ${hover.innerText}\n`
-          document.querySelector("div#wrapper").innerHTML = document.querySelector(`template#${hover.innerText.toLowerCase()}`).innerHTML;
-        } else if(hover.id == "back"){
-          document.querySelector("h1").innerText = `@ihasq's website`
-          goHome();
-        } else if(hover.id == "copy"){
-          if(hover.innerText.charAt(0) == "$"){
-            cryptoAddress.forEach(e => {
-              if(e.name == hover.innerText){
-                navigator.clipboard.writeText(e.address)
-                document.querySelector("label#address").innerText = `Copied address: ${e.address}`
-              }
-            })
-          } else if(hover.innerText.charAt(0) == "N"){
-            navigator.clipboard.writeText("npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc");
-          }
-        }
-      },false);
-      const goHome = () => {
-        document.querySelector("div#wrapper").innerHTML=document.querySelector("template#home").innerHTML;
-      };
-      goHome();
-    </script>
+    <script>var c=[{name:"$BTC",address:"13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk"},{name:"$ETH",address:"0xc24D3470A4405017Ab02d03EE3471F30192E86FD"},{name:"$LTC",address:"ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7"},{name:"$XRP",address:"rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"}];window.addEventListener("click",()=>{var a=document.querySelector("a:hover");"goto"==a.id?(document.querySelector("h1").innerText="@ihasq's website > "+a.innerText+"\n",document.querySelector("div#wrapper").innerHTML=document.querySelector("template#"+a.innerText.toLowerCase()).innerHTML):"back"==a.id?(document.querySelector("h1").innerText="@ihasq's website",d()):"copy"==a.id&&("$"==a.innerText.charAt(0)?c.forEach(b=>{b.name==a.innerText&&(navigator.clipboard.writeText(b.address),document.querySelector("label#address").innerText="Copied address: "+b.address)}):"N"==a.innerText.charAt(0)&&navigator.clipboard.writeText("npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"))},!1);const d=()=>document.querySelector("div#wrapper").innerHTML=document.querySelector("template#home").innerHTML;d();</script>
   </body>
 </html>
