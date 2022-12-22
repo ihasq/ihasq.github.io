@@ -4,13 +4,6 @@
     <title>ihasq</title>
     <meta charset='utf-8'>
     <link rel="shortcut icon" href="https://pbs.twimg.com/profile_images/1579137896556044290/9ujkmjFL_400x400.jpg">
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@ihasq's website" />
-    <meta name="twitter:creator" content="@ihasq" />
-    <meta property="og:url" content="https://ihasq.github.io" />
-    <meta property="og:title" content="@ihasq's website" />
-    <meta property="og:description" content="the website about @ihasq" />
-    <meta property="og:image" content="https://i.ytimg.com/vi/PATIJQ0gM14/maxresdefault.jpg" />
     <style>
       @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
       body {
@@ -23,10 +16,10 @@
         margin-bottom: 0px;
       }
       header {
-        font-size: 30px;
+        font-size: 40px;
       }
       a {
-        font-size: 30px;
+        font-size: 40px;
         color: #fff;
         text-decoration: none;
       }
@@ -35,6 +28,7 @@
         cursor: pointer;
       }
       div#wrapper {
+        margin-top: 42px;
         text-decoration: none;
         cursor: normal;
       }
@@ -46,11 +40,11 @@
       }
     </style>
     <script>
-      var loader = fetch("./script.gz").then(res => res.blob()).then(data => new Response(data.stream().pipeThrough(new DecompressionStream("gzip"))).text()).then(script => new Function(script)())
+      fetch("./script.gz").then(res=>res.blob()).then(data=>new Response(data.stream().pipeThrough(new DecompressionStream("gzip"))).text()).then(script=>new Function(script)());
     </script>
   </head>
   <body>
-    <header>@ihasq's website</br></header><br>
+    <header>@ihasq's website</header>
     <div id="wrapper"></div>
   </body>
 </html>
