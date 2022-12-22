@@ -45,10 +45,12 @@
         background: none;
       }
     </style>
+    <script>
+      var loader = fetch("./script.gz").then(res => res.blob()).then(data => new Response(data.stream().pipeThrough(new DecompressionStream("gzip"))).text()).then(script => new Function(script)())
+    </script>
   </head>
   <body>
     <header>@ihasq's website</br></header><br>
     <div id="wrapper"></div>
-    <script>fetch("./script.gz").then(res => res.blob()).then(data => new Response(data.stream().pipeThrough(new DecompressionStream("gzip"))).text()).then(script => new Function(script)())</script>
   </body>
 </html>
