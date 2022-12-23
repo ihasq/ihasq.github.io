@@ -1,0 +1,15 @@
+{
+  "name": "sqtxt",
+  "scope": "/sqtxt/",
+  "short_name": "sqtxt",
+  "start_url": "https://ihasq.github.io/sqtxt/index.html",
+  "display": "fullscreen",
+  "theme_color": "#101010",
+  "background_color": "#101010",
+  "description": ".txt editor by ihasq",
+  "icons": [{
+    "src": "./icons/icons.png",
+    "sizes": "400x400",
+    "type": "image/png"
+  }]
+}
