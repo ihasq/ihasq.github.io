@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>sqedit</title>
+    <meta charset='utf-8'>
+    <link rel="shortcut icon" href="./icons/icons.png">
+    <link rel="manifest" href="./manifest.json">
+    <script>
+      if('serviceWorker' in navigator){
+	      navigator.serviceWorker.register('./sw.js').then(registration => registration.update());
+	    };
+    </script>
+    <style>
+      :focus {
+        outline: none;
+      }
+      html {
+        height: 100%;
+      }
+      body {
+        font-family: Arial;
+        font-size: 20px;
+        user-select: none;
+        height: 100%;
+        margin: 0;
+        
+      }
+      div.main {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction:column;
+        z-index: 0;
+      }
+      div.text {
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        box-sizing: border-box;
+      }
+      textarea {
+        font-size: 20px;
+        font-family: Arial;
+        outline: none;
+        border: none;
+        color: #000;
+        background: #fff;
+        height: 100%;
+        width: 100%;
+        resize: none;
+        box-sizing: border-box;
+        padding-left: 2px;
+        overflow: auto;
+        position: absolute;
+        z-index: 0;
+        tab-size: 4;
+      }
+      div.ribbon {
+        border-top: 1px solid #999;
+        border-bottom: 1px solid #999;
+        background: linear-gradient(#fff,#ddd);
+        box-sizing: border-box;
+        color: #000;
+        height: auto;
+      }
+      select {
+        font-size: 15px;
+        height: 18px;
+        margin-right: 0.5em;
+        width: 48px
+      }
+      select.setFontType {
+        width: 100px;
+      }
+      div.ribbon.footer {
+        padding: 0.3em;
+        font-size: 16px;
+        text-align: right;
+        height: auto;
+      }
+      div.ribbon.wrapper{
+        border:none;
+      }
+      div.ribbon.wrapper.right{
+        box-sizing: border-box;
+        padding: 0;
+        display: block;
+        width: 80%;
+      }
+      div.ribbon.wrapper.left {
+        padding: none;
+        width: auto;
+        width: 10%;
+        text-align: left;
+      }
+      label.footer {
+        margin-right: 16px;
+      }
+      svg.menu {
+        position: absolute;
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+        background : none;
+      }
+      button {
+        font-size: 16px;
+        border-width: 0px;
+        background: linear-gradient(#fff,#ddd);
+        margin-left: 0;
+        color: #000;
+        height: 1.8em;
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+      }
+      button:active {
+        background: linear-gradient(#eee, #ccc);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <div class="ribbon">
+        <button onclick="newFile()">New</button>
+        <button onclick="saveFile()">Save</button>
+        <button onclick="openFile()">Open</button>
+        <button onclick="tweetThis()">Tweet</button>
+      </div>
+      <div class="text">
+        <textarea class="form"></textarea>
+      </div>
+      <div class="ribbon footer">
+        <label class="footer">font: <select class="setFontType" onchange="setFontType(this.options[this.selectedIndex].text)"></select></label>
+        <label class="footer">
+          size: <select class="setFontSize" onchange="setFontSize(this.options[this.selectedIndex].text)"></select>px
+        </label>
+        <label class="footer">
+          tab: <select class="setTabSize" onchange="setTabSize(this.options[this.selectedIndex].text)"></select>em
+        </label>
+      </div>
+    </div>
+    <a class="twitter-share-button" href="" target="_blank" hidden></a>
+    <script>
+      document.querySelectorAll("div.ribbon").forEach(e=>e.setAttribute("oncontextmenu","return false"));
+      const preset = [
+        {
+          class: "setFontType",
+          list: [
+            "Arial",
+            "Monospace",
+            "Serif",
+            "Sans-serif",
+            "System-ui",
+          ],
+          selected: "Arial"
+        },
+        {
+          class: "setFontSize",
+          list: [
+            8, 12, 16, 20, 24, 28
+          ],
+          selected: 20
+        },
+        {
+          class: "setTabSize",
+          list: [
+            2, 4, 6, 8
+          ],
+          selected: 4
+        }
+      ];
+      const loc = document.querySelector("label.footer.location");
+      const ta = document.querySelector("textarea.form");
+      const counter = document.querySelector("label.counter")
+      const opts = {
+        types: [{
+          description: 'Text file',
+          accept: {'text/plain': ['.txt']},
+        }],
+        multiple: false
+      };
+      const setFontType = obj => {
+        ta.style.fontFamily = obj;
+        document.querySelector("select.setFontType").style.fontFamily = obj;
+      };
+      const setFontSize = obj => ta.style.fontSize = obj + 'px';
+      const setTabSize = obj => ta.style.tabSize = Number(obj);
+      preset.forEach(e => {
+        let selectClass = document.querySelector(`select.${e.class}`);
+        e.list.forEach(f => {
+          let fontPreview = "", selectedOption;
+          if(e.class=="setFontType"){
+            fontPreview = ` style='font-family:${f}'`
+          };
+          if(e.selected == f) {
+            selectedOption = " selected";
+          } else {
+            selectedOption = "";
+          };
+          selectClass.insertAdjacentHTML("beforeend",`<option${fontPreview}${selectedOption}>${f}</option>`);
+        })
+      });
+      const newFile =()=> ta.value = "";
+      let gonnaTweet = false;
+      const tweetThis =()=> {
+        if(ta.value.length!=0){
+          gonnaTweet = true;
+          const tw = document.querySelector("a.twitter-share-button");
+          tw.setAttribute("href",`https://twitter.com/intent/tweet?text=${encodeURIComponent(ta.value)}`);
+          tw.click();
+          gonnaTweet = false;
+        }
+      };
+      async function saveFile() {
+        if(ta.value.length!=0){
+          const file = await window.showSaveFilePicker(opts);
+          const stream = await file.createWritable();
+          const blob = new Blob([ta.value], { type: 'text/plain' });
+          await stream.write(blob);
+          await stream.close();
+        }
+      };
+      let readFhList, readFh, readFile, reader;
+      async function openFile() {
+        readFhList = await window.showOpenFilePicker(opts);
+        readFh = readFhList[0];
+        readFile = await readFh.getFile();
+        reader = new FileReader()
+        reader.readAsText(readFile, "UTF-8");
+        reader.onload = event => ta.value = event.target.result;
+      };
+      ta.addEventListener('keydown', e => {
+        let elem, end, start, value;
+        if (e.keyCode === 9) {
+          if (e.preventDefault) {
+            e.preventDefault();
+          };
+          elem = e.target;
+          start = elem.selectionStart;
+          end = elem.selectionEnd;
+          value = elem.value;
+          elem.value = "" + (value.substring(0, start)) + "\t" + (value.substring(end));
+          elem.selectionStart = elem.selectionEnd = start + 1;
+          return false;
+        }
+      });
+      window.onbeforeunload = e => {
+        if(ta.value.length!=0 && !gonnaTweet){
+          e.returnValue = ""
+        }
+      };
+    </script>
+  </body>
+</html>
