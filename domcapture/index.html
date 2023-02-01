@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>domcapture</title>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <div id="captureTarget" contenteditable="true">DOM capture test</div><br>
+    <button onclick="captureDOM('#captureTarget')">capture</button><br>
+    <canvas id="result" width="500" height="500" hidden></canvas><br>
+    <img id="img">
+    <script>
+      const captureDOM = selector => {
+        let dom = document.querySelector(selector);
+        let width = dom.clientWidth;
+        let height = dom.clientHeight;
+        console.log("capturing");
+        let svgData = `
+          <svg id="captureSVG" width="${width}" height="${height}">
+            <foreignObject width="${width}" height="${height}" x="0" y="0">
+              ${dom.innerHTML}
+            </foreignObject>
+          </svg>
+        `;
+        let cvs = document.getElementById("result");
+        let c2d = cvs.getContext('2d');
+        let data = new DOMParser().parseFromString(svgData, "text/html");
+        let img = new Image();
+        img.src = `data:image/svg+xml;base64,${window.btoa(new XMLSerializer().serializeToString(data.querySelector("#captureSVG")))}`;
+        img.onload = () => {
+          c2d.clearRect(0, 0, width, height);
+          c2d.drawImage(img, 0, 0, width, height);
+          document.querySelector("#img").src = cvs.toDataURL();
+        };
+      };
+    </script>
+  </body>
+</html>
