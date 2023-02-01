@@ -7,7 +7,7 @@
   <body>
     <div id="captureTarget" contenteditable="true">DOM capture test</div><br>
     <button onclick="captureDOM('#captureTarget')">capture</button><br>
-    <canvas id="result" width="500" height="500" hidden></canvas><br>
+    <canvas id="result" hidden></canvas><br>
     <img id="img">
     <script>
       const captureDOM = selector => {
@@ -23,6 +23,8 @@
           </svg>
         `;
         let cvs = document.getElementById("result");
+        cvs.width = width;
+        cvs.height = height;
         let c2d = cvs.getContext('2d');
         let data = new DOMParser().parseFromString(svgData, "text/html");
         let img = new Image();
