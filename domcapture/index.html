@@ -26,7 +26,7 @@
         let c2d = cvs.getContext('2d');
         let data = new DOMParser().parseFromString(svgData, "text/html");
         let img = new Image();
-        img.src = `data:image/svg+xml;base64,${window.btoa(new XMLSerializer().serializeToString(data.querySelector("#captureSVG")))}`;
+        img.src = `data:image/svg+xml;base64,${window.btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(data.querySelector("#captureSVG")))))}`;
         img.onload = () => {
           c2d.clearRect(0, 0, width, height);
           c2d.drawImage(img, 0, 0, width, height);
