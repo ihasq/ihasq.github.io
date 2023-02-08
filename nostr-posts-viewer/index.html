@@ -39,7 +39,7 @@
         padding: 0 0 4px 0;
       }
     </style>
-    <script src="https://unpkg.com/nostr-tools/lib/nostr.bundle.js"></script>
+    <script src="nostr.bundle.min.js"></script>
   </head>
   <body>
     <div class="container">
@@ -66,7 +66,7 @@
           const date = new Date(event.created_at * 1000);
           container.insertAdjacentHTML("beforeend",`
             <div class="line" href="">
-              <div class="id">${date.toLocaleDateString()} ${date.toLocaleTimeString()} ID: ${event.id}</div>
+              <div class="id">${date.toLocaleDateString()} ${date.toLocaleTimeString()} ID: ${event.id}<br></div>
               ${event.content}<br>
             </div>
           `)
