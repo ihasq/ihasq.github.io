@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Web hosting from Nostr network</title>
+    <meta charset="utf-8">
+    <script src="https://unpkg.com/nostr-tools/lib/nostr.bundle.js"></script>
+  </head>
+  <body>
+    <script type="module">
+      let element;
+      const relay = window.NostrTools.relayInit("wss://relay.damus.io");
+      await relay.connect();
+      relay.on('connect', () => {
+        console.log(`connected to ${relay.url}`)
+      });
+      relay.on('error', () => {
+        console.log(`failed to connect to ${relay.url}`)
+      });
+      let sub = relay.sub([
+        {
+          ids: ['cb60f41e3d34650b4bc5f98fb1bc15266731b55001160b16d6da8bd67a2392d3']
+        }
+      ]);
+      sub.on('event', event => {
+        element = event.content;
+        document.body.insertAdjacentHTML("afterbegin", element)
+      });
+      sub.on('eose', () => {
+        sub.unsub()
+      });
+    </script>
+  </body>
+</html>
