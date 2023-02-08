@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>@ihasq's nostr posts</title>
+    <meta charset="utf-8">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap');
+      ::selection {
+        background-color: #000;
+      }
+      ::-webkit-scrollbar {
+        display: none;
+      }
+      br::selection {
+        background: none;
+      }
+      body {
+        color: #ffffff;
+        font-family: 'IBM Plex Mono','system-ui', monospace;
+        background-color: #2020ff;
+        width: 100%;
+        margin: 0px;
+      }
+      header {
+        font-size: 35px;
+      }
+      div.container {
+        background: none;
+        margin: 70px 5% 70px 5%;
+        width: 90%;
+      }
+      div.line {
+        font-size: 20px;
+        margin: 75px 0 75px 0;
+        overflow-wrap: break-word;
+      }
+      div.id {
+        font-size: 12px;
+        padding: 0 0 4px 0;
+      }
+    </style>
+    <script src="https://unpkg.com/nostr-tools/lib/nostr.bundle.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <header>@ihasq's trackable latest nostr posts:<br></header>
+    </div>
+    <script>
+      const container = document.querySelector(".container");
+      async function getPosts() {
+        const relay = window.NostrTools.relayInit("wss://relay.damus.io");
+        await relay.connect();
+        relay.on('connect', () => {
+          console.log(`connected to ${relay.url}`)
+        });
+        relay.on('error', () => {
+          console.log(`failed to connect to ${relay.url}`)
+        });
+        let sub = relay.sub([
+          {
+            "authors": ["5e0708079b7127b584ef197b9104ad13895dbfc535bbcc618961bd54a328e997"],
+            "kinds": [1]
+          }
+        ]);
+        sub.on('event', event => {
+          const date = new Date(event.created_at * 1000);
+          container.insertAdjacentHTML("beforeend",`
+            <div class="line" href="">
+              <div class="id">${date.toLocaleDateString()} ${date.toLocaleTimeString()} ID: ${event.id}</div>
+              ${event.content}<br>
+            </div>
+          `)
+        });
+      };
+      getPosts();
+    </script>
+  </body>
+</html>
