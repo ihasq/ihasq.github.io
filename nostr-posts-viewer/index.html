@@ -47,8 +47,15 @@
     </div>
     <script>
       const container = document.querySelector(".container");
-      async function getPosts() {
-        const relay = window.NostrTools.relayInit("wss://relay.damus.io");
+      const pool = window.NostrTools.pool();
+      [
+        "wss://relay.nostr.info",
+        "wss://relay.damus.io",
+        "wss://relay.snort.social",
+        "wss://relay.nostr.bg",
+        "wss://nos.lol"
+      ].forEach(async url => {
+        let relay = pool.ensureRelay(url);
         await relay.connect();
         relay.on('connect', () => {
           console.log(`connected to ${relay.url}`)
@@ -71,8 +78,10 @@
             </div>
           `)
         });
-      };
-      getPosts();
+        sub.on('eose', () => {
+          sub.unsub()
+        });
+      });
     </script>
   </body>
 </html>
