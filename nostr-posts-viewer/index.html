@@ -48,13 +48,53 @@
     <script>
       const container = document.querySelector(".container");
       const pool = window.NostrTools.pool();
-      [
-        "wss://relay.nostr.info",
-        "wss://relay.damus.io",
+      const relays = [
         "wss://relay.snort.social",
         "wss://relay.nostr.bg",
-        "wss://nos.lol"
-      ].forEach(async url => {
+        "wss://nos.lol",
+        "wss://nostr.fmt.wiz.biz",
+        "wss://nostr.wine"
+      ]
+      let postIdList = [];
+      let postIdPast = [];
+      let postDatePast = [0];
+      let postDOM = [];
+      let clear = 0;
+      const contract = buffer => {
+        postIdList = postIdList.concat(buffer)
+        clear++;
+        // inserting DOM
+        if(clear > relays.length / 2){
+          console.log(postIdList)
+          postIdList.forEach(e => {
+            if(!postIdPast.includes(e.id)){
+              postIdPast.push(e.id)
+              postDOM.push(e)
+              postDatePast.push(e.created_at)
+            }
+          })
+          postIdPast = [];
+          postDatePast.shift();
+          console.log(postDatePast)
+          postDatePast.sort((a,b)=> a - b)
+          let dom, date;
+          postDatePast.forEach(e=>{
+            dom = postDOM.find(f => f.created_at === e)
+            if(!postIdPast.includes(dom.content)){
+              postIdPast.push(dom.content)
+              date = new Date(e.created_at * 1000);
+              document.querySelector("header").insertAdjacentHTML("afterend",`
+                <div class="line">
+                  <div class="id">${date.toLocaleDateString()} ${date.toLocaleTimeString()} ID: ${dom.id}<br></div>
+                  ${dom.content}<br>
+                </div>
+              `)
+            }
+          })
+        }
+      }
+      relays.forEach(async url => {
+        let postIdListBuffer = [];
         let relay = pool.ensureRelay(url);
         await relay.connect();
         relay.on('connect', () => {
@@ -69,17 +109,13 @@
             "kinds": [1]
           }
         ]);
+        let postCreatedDate = [0];
         sub.on('event', event => {
-          const date = new Date(event.created_at * 1000);
-          container.insertAdjacentHTML("beforeend",`
-            <div class="line" href="">
-              <div class="id">${date.toLocaleDateString()} ${date.toLocaleTimeString()} ID: ${event.id}<br></div>
-              ${event.content}<br>
-            </div>
-          `)
+          postIdListBuffer.push(event);
         });
         sub.on('eose', () => {
           sub.unsub()
+          if(clear <= 2)contract(postIdListBuffer);
         });
       });
     </script>
