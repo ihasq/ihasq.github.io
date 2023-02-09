@@ -82,7 +82,7 @@
             dom = postDOM.find(f => f.created_at === e)
             if(!postIdPast.includes(dom.content)){
               postIdPast.push(dom.content)
-              date = new Date(e.created_at * 1000);
+              date = new Date(dom.created_at * 1000);
               document.querySelector("header").insertAdjacentHTML("afterend",`
                 <div class="line">
                   <div class="id">${date.toLocaleDateString()} ${date.toLocaleTimeString()} ID: ${dom.id}<br></div>
