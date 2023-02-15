@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- Last modified: 2023/02/15 -->
     <title>ihasq</title>
     <meta charset='utf-8'>
     <link rel="shortcut icon" href="https://pbs.twimg.com/profile_images/1579137896556044290/9ujkmjFL_400x400.jpg">
@@ -52,14 +53,17 @@
         background: none;
       }
     </style>
+    <script>
+      console.log(`                         .  ...^^~75GJ .\n                  .75~  .:^YGG55P5?7?!!^..\n          .77?J.. .JGYJ!:!YGGG5?PP55GPY5GPJ~7.\n          .77PGPY^  ~JYPGG#GGPJ5G#PJJ?GB55575.\n      .::.:JJYGGPPJJPBBGGPBBBBB#####BBBP5Y7YY!~^.\n    ?5^7!^.:YPBBG5YY5PG? .~7?YJ77!?YGGGGGYPBP~..~.\n    YP!^Y?7^~7J5GBBP5P~ ..~7!^:.    .!J7?YPBP!7YJ:\n    ^5PP?!777J?J?BPJJ?~:^~7J5PYY??:      ..?GY!J5:\n   ^YJJY?^?P?YGBPY77~~J5J!!YPPBBB5.  !!^^::^PYYGG:\n  ^YPJYBBYJ?:~G?!^    ....::?GBG?.  :P5J!7^:PPG5YY^\n .J?YBGBGGYP^77^.        ... :.     .BBGPJ~!?YGJ!^\n .YYPP55JBP?^!!:              .:.    ~?7!7~Y5PY.\n  5GYJ5JBBBJ:~7^:.  .         ^!~~~:.   .. .GG^\n  :Y~?7?J!?5~^~.:..           !GBGJ?Y:     .G5.\n   .~7J?7~!J~:.........     ...:7GP5J     ...\n     ^JPPGP7^^^^:..  ..    .7?7~~JYJ^   ..: \n     ^J7YPG~::~~!!~:....     ^YJ77?!~. ..~.\n     ~PPYJ5^:.:^~!7!!!~^..       .::.:.\n     !5PBGJ^!~:::^~~^~~!!!!~~^^^.    .~!!~:.\n     7J?GGY:!YJ!^^^~~::^~~~!!!!!?77:    .:^!~.\n      :7JPP^7Y5Y7~7??7!!!~^^^^^::^!J:.      .:..\n       .75J^!?YY!!?Y555555YYJ!~^^^^:.\n        .~Y~!J5Y?!7?JYYY555Y?7!J?^:\n          !!!~^~!^:..:.~JJ?7!?J5J7?7.\n           .~.    .   ..!?!?JY5Y?Y??Y:\n╭─────────────────────────────────────────────────────╮\n│ ihasq's website                                     │\n│                                                     │\n│ GitHub: https://github.com/ihasq                    │\n│ Nostr:  https://nostr.directory/p/ihasq             │\n│ Devlog: https://zenn.dev/ihasq                      │\n│                                                     │\n│ $BTC:   13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk          │\n│ $ETH:   0xc24D3470A4405017Ab02d03EE3471F30192E86FD  │\n│ $LTC:   ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7 │\n│ $XRP:   rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU          │\n╰─────────────────────────────────────────────────────╯\n\n`);
+    </script>
   </head>
   <body>
     <label id="header">ihasq's website</label><br>
     <div class="Wrapper">
       <div class="Container Visible" id="home">
-        <a class="SiteLink" href="https://github.com/ihasq">GitHub</a></br>
-        <a class="SiteLink" href="https://ihasq.com/nostr-posts-viewer">Nostr</a></br>
-        <a class="SiteLink" href="https://zenn.dev/ihasq">Devlog</a></br>
+        <a class="SiteLink" href="https://github.com/ihasq" target="_blank" rel="noopener noreferrer">GitHub</a></br>
+        <a class="SiteLink" href="https://ihasq.com/nostr-posts-viewer" target="_blank" rel="noopener noreferrer">Nostr</a></br>
+        <a class="SiteLink" href="https://zenn.dev/ihasq" target="_blank" rel="noopener noreferrer">Devlog</a></br>
         <a class="GoTo" id="Donate">Donate</a></br>
       </div>
       <div class="Container Hidden" id="Donate">
@@ -75,18 +79,18 @@
     </div>
     <script>
       document.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
-        if(a.className === "GoTo") {
-          if(a.id === "home") {
-            document.querySelector("label#header").textContent = "ihasq's website";
-          } else document.querySelector("label#header").textContent = `ihasq's website > ${a.id}`;
-          document.querySelectorAll("div.Container.Visible").forEach(visibleContainer => visibleContainer.classList.replace("Visible","Hidden"));
-          document.querySelector(`div.Container#${a.id}`).classList.replace("Hidden","Visible");
-        } else if(a.className === "CryptoCopy") {
-          navigator.clipboard.writeText(a.id);
-          document.querySelector("#addressView").textContent = `Copied address: ${a.id}`;
-        }
+        switch(a.className) {
+          case "GoTo":
+            document.querySelector("label#header").textContent = (a.id === "home")? "ihasq's website" : `ihasq's website > ${a.id}`;
+            document.querySelectorAll("div.Container.Visible").forEach(visibleContainer => visibleContainer.classList.replace("Visible","Hidden"));
+            document.querySelector(`div.Container#${a.id}`).classList.replace("Hidden","Visible");
+            break;
+          case "CryptoCopy":
+            navigator.clipboard.writeText(a.id);
+            document.querySelector("#addressView").textContent = `Copied address: ${a.id}`;
+            break;
+        };
       }));
-      console.log("\n                         .  ...^^~75GJ .\n                  .75~  .:^YGG55P5?7?!!^..\n          .77?J.. .JGYJ!:!YGGG5?PP55GPY5GPJ~7.\n          .77PGPY^  ~JYPGG#GGPJ5G#PJJ?GB55575.\n      .::.:JJYGGPPJJPBBGGPBBBBB#####BBBP5Y7YY!~^.\n    ?5^7!^.:YPBBG5YY5PG? .~7?YJ77!?YGGGGGYPBP~..~.\n    YP!^Y?7^~7J5GBBP5P~ ..~7!^:.    .!J7?YPBP!7YJ:\n    ^5PP?!777J?J?BPJJ?~:^~7J5PYY??:      ..?GY!J5:\n   ^YJJY?^?P?YGBPY77~~J5J!!YPPBBB5.  !!^^::^PYYGG:\n  ^YPJYBBYJ?:~G?!^    ....::?GBG?.  :P5J!7^:PPG5YY^\n .J?YBGBGGYP^77^.        ... :.     .BBGPJ~!?YGJ!^\n .YYPP55JBP?^!!:              .:.    ~?7!7~Y5PY.\n  5GYJ5JBBBJ:~7^:.  .         ^!~~~:.   .. .GG^\n  :Y~?7?J!?5~^~.:..           !GBGJ?Y:     .G5.\n   .~7J?7~!J~:.........     ...:7GP5J     ...\n     ^JPPGP7^^^^:..  ..    .7?7~~JYJ^   ..: \n     ^J7YPG~::~~!!~:....     ^YJ77?!~. ..~.\n     ~PPYJ5^:.:^~!7!!!~^..       .::.:.\n     !5PBGJ^!~:::^~~^~~!!!!~~^^^.    .~!!~:.\n     7J?GGY:!YJ!^^^~~::^~~~!!!!!?77:    .:^!~.\n      :7JPP^7Y5Y7~7??7!!!~^^^^^::^!J:.      .:..\n       .75J^!?YY!!?Y555555YYJ!~^^^^:.\n        .~Y~!J5Y?!7?JYYY555Y?7!J?^:\n          !!!~^~!^:..:.~JJ?7!?J5J7?7.\n           .~.    .   ..!?!?JY5Y?Y??Y:\n╭─────────────────────────────────────────────────────╮\n│ @ihasq's website                                    │\n│                                                     │\n│ GitHub: https://github.com/ihasq                    │\n│ Nostr:  https://nostr.directory/p/ihasq             │\n│ Devlog: https://zenn.dev/ihasq                      │\n│                                                     │\n│ $BTC:   13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk          │\n│ $ETH:   0xc24D3470A4405017Ab02d03EE3471F30192E86FD  │\n│ $LTC:   ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7 │\n│ $XRP:   rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU          │\n╰─────────────────────────────────────────────────────╯\n\n")
     </script>
   </body>
 </html>
