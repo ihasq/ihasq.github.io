@@ -92,7 +92,7 @@
           break;
           case "CryptoCopy":
             navigator.clipboard.writeText(a.id);
-            document.querySelector("#addressView").textContent = `Copied address: ${a.id}`;
+            document.querySelector("#addressView").textContent = `Copied address: ${a.id.slice(0,25)}...`;
           break;
           case "SiteLink":
             window.open(a.id, "_blank", "noopener noreferrer");
