@@ -65,40 +65,53 @@
     <label id="header">ihasq's website</label><br>
     <div class="Wrapper">
       <div class="Container Visible" id="Home">
-        <a class="SiteLink" id="https://github.com/ihasq">GitHub</a></br>
-        <a class="SiteLink" id="https://ihasq.com/nostr-posts-viewer">Nostr</a></br>
-        <a class="SiteLink" id="https://zenn.dev/ihasq">Devlog</a></br>
+        <a class="SiteLink">GitHub</a></br>
+        <a class="SiteLink">Nostr</a></br>
+        <a class="SiteLink">DevLog</a></br>
         <a class="GoTo" id="Donate">Donate</a></br>
       </div>
       <div class="Container Hidden" id="Donate">
         <label id="addressView">Copied address: None</label></br>
         </br>
-        <a class="CryptoCopy" id="13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk">$BTC</a></br>
-        <a class="CryptoCopy" id="lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2">$BTC_LN</a></br>
-        <a class="CryptoCopy" id="0xc24D3470A4405017Ab02d03EE3471F30192E86FD">$ETH</a></br>
-        <a class="CryptoCopy" id="ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7">$LTC</a></br>
-        <a class="CryptoCopy" id="rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU">$XRP</a></br>
+        <a class="CryptoCopy">$BTC</a></br>
+        <a class="CryptoCopy">$BTC_LN</a></br>
+        <a class="CryptoCopy">$ETH</a></br>
+        <a class="CryptoCopy">$LTC</a></br>
+        <a class="CryptoCopy">$XRP</a></br>
         </br>
         <a class="GoTo" id="Home">back</a></br>    
       </div>
     </div>
     <script>
-      document.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
-        switch(a.className) {
-          case "GoTo":
-            document.querySelector("label#header").textContent = (a.id === "Home")? "ihasq's website" : `ihasq's website > ${a.id}`;
-            document.querySelectorAll("div.Container.Visible").forEach(visibleContainer => visibleContainer.classList.replace("Visible","Hidden"));
-            document.querySelector(`div.Container#${a.id}`).classList.replace("Hidden","Visible");
-          break;
-          case "CryptoCopy":
-            navigator.clipboard.writeText(a.id);
-            document.querySelector("#addressView").textContent = `Copied address: ${a.id.slice(0,25)}...`;
-          break;
-          case "SiteLink":
-            window.open(a.id, "_blank", "noopener noreferrer");
-          break;
-        };
-      }), { passive: true });
+      {
+        const CRYPTO_ADDRESS = new Map([
+          ["$BTC", "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk"],
+          ["$BTC_LN", "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2"],
+          ["$ETH", "0xc24D3470A4405017Ab02d03EE3471F30192E86FD"],
+          ["$LTC", "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7"],
+          ["$XRP", "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"]
+        ]), SITE_ADDRESS = new Map([
+          ["GitHub", "https://github.com/ihasq"],
+          ["Nostr", "https://ihasq.com/nostr-posts-viewer"],
+          ["DevLog", "https://zenn.dev/ihasq"]
+        ]);
+        document.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+          switch(a.className) {
+            case "GoTo":
+              document.querySelector("label#header").textContent = (a.id === "Home")? "ihasq's website" : `ihasq's website > ${a.id}`;
+              document.querySelectorAll("div.Container.Visible").forEach(visibleContainer => visibleContainer.classList.replace("Visible","Hidden"));
+              document.querySelector(`div.Container#${a.id}`).classList.replace("Hidden","Visible");
+            break;
+            case "CryptoCopy":
+              navigator.clipboard.writeText(CRYPTO_ADDRESS.get(a.textContent));
+              document.querySelector("#addressView").textContent = `Copied address: ${CRYPTO_ADDRESS.get(a.textContent).slice(0,25)}...`;
+            break;
+            case "SiteLink":
+              window.open(SITE_ADDRESS.get(a.textContent), "_blank", "noopener noreferrer");
+            break;
+          };
+        }), { passive: true });
+      }
     </script>
   </body>
 </html>
