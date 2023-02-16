@@ -88,13 +88,14 @@
             document.querySelector("label#header").textContent = (a.id === "Home")? "ihasq's website" : `ihasq's website > ${a.id}`;
             document.querySelectorAll("div.Container.Visible").forEach(visibleContainer => visibleContainer.classList.replace("Visible","Hidden"));
             document.querySelector(`div.Container#${a.id}`).classList.replace("Hidden","Visible");
-            break;
+          break;
           case "CryptoCopy":
             navigator.clipboard.writeText(a.id);
             document.querySelector("#addressView").textContent = `Copied address: ${a.id}`;
-            break;
+          break;
           case "SiteLink":
             window.open(a.id, "_blank", "noopener noreferrer");
+          break;
         };
       }));
     </script>
