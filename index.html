@@ -80,17 +80,17 @@
     </div>
     <script>
       {
-        const CRYPTO_ADDRESS = new Map([
-          ["$BTC", "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk"],
-          ["$BTC_LN", "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2"],
-          ["$ETH", "0xc24D3470A4405017Ab02d03EE3471F30192E86FD"],
-          ["$LTC", "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7"],
-          ["$XRP", "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"]
-        ]), SITE_ADDRESS = new Map([
-          ["GitHub", "https://github.com/ihasq"],
-          ["Nostr", "https://ihasq.com/nostr-posts-viewer"],
-          ["DevLog", "https://zenn.dev/ihasq"]
-        ]), clickHandler = a => a.addEventListener("click", () => {
+        const CRYPTO_ADDRESS = {
+          $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
+          $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
+          $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
+          $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
+          $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"
+        }, SITE_ADDRESS = {
+          GitHub: "https://github.com/ihasq",
+          Nostr: "https://ihasq.com/nostr-posts-viewer",
+          DevLog: "https://zenn.dev/ihasq"
+        }, clickHandler = a => a.addEventListener("click", () => {
           switch(a.className) {
             case "GoTo":
               document.querySelector("label#header").textContent = (a.id === "Home")? "ihasq's website" : `ihasq's website > ${a.id}`;
@@ -98,11 +98,11 @@
               document.querySelector(`div.Container#${a.id}`).classList.add("Visible");
             break;
             case "CryptoCopy":
-              navigator.clipboard.writeText(CRYPTO_ADDRESS.get(a.textContent));
-              document.querySelector("#addressView").textContent = `Copied address: ${CRYPTO_ADDRESS.get(a.textContent).slice(0,25)}...`;
+              navigator.clipboard.writeText(CRYPTO_ADDRESS[a.textContent]);
+              document.querySelector("#addressView").textContent = `Copied address: ${CRYPTO_ADDRESS[a.textContent].slice(0,25)}...`;
             break;
             case "SiteLink":
-              window.open(SITE_ADDRESS.get(a.textContent), "_blank", "noopener noreferrer");
+              window.open(SITE_ADDRESS[a.textContent], "_blank", "noopener noreferrer");
             break;
           };
         }, { passive: true });
