@@ -43,12 +43,10 @@
         padding: 0;
       }
       .Visible {
-        visibility: visible;
+        content-visibility: visible;
       }
       .Hidden {
-        height: 0;
-        width: 0;
-        visibility: hidden;
+        content-visibility: hidden;
       }
       ::selection {
         background-color: #000;
@@ -94,8 +92,7 @@
           ["GitHub", "https://github.com/ihasq"],
           ["Nostr", "https://ihasq.com/nostr-posts-viewer"],
           ["DevLog", "https://zenn.dev/ihasq"]
-        ]);
-        document.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+        ]), clickHandler = a => a.addEventListener("click", () => {
           switch(a.className) {
             case "GoTo":
               document.querySelector("label#header").textContent = (a.id === "Home")? "ihasq's website" : `ihasq's website > ${a.id}`;
@@ -110,8 +107,9 @@
               window.open(SITE_ADDRESS.get(a.textContent), "_blank", "noopener noreferrer");
             break;
           };
-        }), { passive: true });
-      }
+        }, { passive: true });
+        document.querySelectorAll("a").forEach(a => clickHandler(a));
+      };
     </script>
   </body>
 </html>
