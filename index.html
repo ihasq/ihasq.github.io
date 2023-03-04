@@ -41,12 +41,10 @@
       div.Container {
         margin: 0;
         padding: 0;
-      }
-      .Visible {
-        content-visibility: visible;
-      }
-      .Hidden {
         content-visibility: hidden;
+      }
+      div.Container.Visible {
+        content-visibility: visible;
       }
       ::selection {
         background-color: #000;
@@ -68,7 +66,7 @@
         <a class="SiteLink">DevLog</a></br>
         <a class="GoTo" id="Donate">Donate</a></br>
       </div>
-      <div class="Container Hidden" id="Donate">
+      <div class="Container" id="Donate">
         <label id="addressView">Copied address: None</label></br>
         </br>
         <a class="CryptoCopy">$BTC</a></br>
@@ -96,8 +94,8 @@
           switch(a.className) {
             case "GoTo":
               document.querySelector("label#header").textContent = (a.id === "Home")? "ihasq's website" : `ihasq's website > ${a.id}`;
-              document.querySelectorAll("div.Container.Visible").forEach(visibleContainer => visibleContainer.classList.replace("Visible","Hidden"));
-              document.querySelector(`div.Container#${a.id}`).classList.replace("Hidden","Visible");
+              document.querySelector("div.Container.Visible").classList.remove("Visible");
+              document.querySelector(`div.Container#${a.id}`).classList.add("Visible");
             break;
             case "CryptoCopy":
               navigator.clipboard.writeText(CRYPTO_ADDRESS.get(a.textContent));
