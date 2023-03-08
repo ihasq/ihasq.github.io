@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Last modified: 2023/02/16 -->
+    <!-- Last modified: 2023/03/04 -->
     <title>ihasq</title>
     <meta charset='utf-8'>
-    <link rel="shortcut icon" href="https://pbs.twimg.com/profile_images/1579137896556044290/9ujkmjFL_400x400.jpg">
+    <link rel="shortcut icon" href="https://ihasq.com/image.webp">
     <style>
       @font-face {
         font-family: "Liberation Mono";
@@ -19,11 +19,12 @@
         margin-left: 6vw;
         margin-top: 30vh;
         margin-bottom: 0px;
+        overflow: hidden;
       }
       header {
         font-size: 40px;
       }
-      label#header, a {
+      label.Header, a {
         font-size: 40px;
         color: #fff;
         text-decoration: none;
@@ -58,51 +59,67 @@
     </script>
   </head>
   <body>
-    <label id="header">ihasq's website</label><br>
+    <label class="Header">ihasq's website</label><br>
     <div class="Wrapper">
-      <div class="Container Visible" id="Home">
-        <a class="SiteLink">GitHub</a></br>
-        <a class="SiteLink">Nostr</a></br>
-        <a class="SiteLink">DevLog</a></br>
-        <a class="GoTo" id="Donate">Donate</a></br>
+      <div class="Container Home Visible">
+        <a class="Site GitHub">GitHub</a></br>
+        <a class="Site Twitter">Twitter</a></br>
+        <a class="GoTo Nostr">Nostr</a></br>
+        <a class="Site Zenn">DevLog</a></br>
+        <a class="GoTo Donate">Donate</a></br>
       </div>
-      <div class="Container" id="Donate">
-        <label id="addressView">Copied address: None</label></br>
+      <div class="Container Donate">
+        <label class="AddressView Crypto">Copied address: None</label></br>
         </br>
-        <a class="CryptoCopy">$BTC</a></br>
-        <a class="CryptoCopy">$BTC_LN</a></br>
-        <a class="CryptoCopy">$ETH</a></br>
-        <a class="CryptoCopy">$LTC</a></br>
-        <a class="CryptoCopy">$XRP</a></br>
+        <a class="Copy Crypto $BTC">$BTC</a></br>
+        <a class="Copy Crypto $BTC_LN">$BTC_LN</a></br>
+        <a class="Copy Crypto $ETH">$ETH</a></br>
+        <a class="Copy Crypto $LTC">$LTC</a></br>
+        <a class="Copy Crypto $XRP">$XRP</a></br>
         </br>
-        <a class="GoTo" id="Home">back</a></br>    
+        <a class="GoTo Home">back</a></br>    
+      </div>
+      <div class="Container Nostr">
+        <label class="AddressView Pubkey">Copied address: None</label></br>
+        </br>
+        <a class="Copy Pubkey Nostr">Pubkey</a></br>
+        <a class="Site Nostr">Posts</a></br>
+        </br>
+        <a class="GoTo Home">back</a></br>    
       </div>
     </div>
     <script>
       {
-        const CRYPTO_ADDRESS = {
-          $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
-          $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
-          $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
-          $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
-          $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"
-        }, SITE_ADDRESS = {
+        const COPY_ADDRESS = {
+          Crypto: {
+            $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
+            $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
+            $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
+            $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
+            $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"
+          },
+          Pubkey: {
+            Nostr: "npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"
+          }
+        }, SITE_LINK = {
           GitHub: "https://github.com/ihasq",
+          Twitter: "https://twitter.com/twihasq",
           Nostr: "https://ihasq.com/nostr-posts-viewer",
-          DevLog: "https://zenn.dev/ihasq"
+          Zenn: "https://zenn.dev/ihasq"
         }, clickHandler = a => a.addEventListener("click", () => {
-          switch(a.className) {
+          const CLASS_LIST = a.classList;
+          switch(CLASS_LIST[0]) {
             case "GoTo":
-              document.querySelector("label#header").textContent = (a.id === "Home")? "ihasq's website" : `ihasq's website > ${a.id}`;
+              document.querySelector("label.Header").textContent = (CLASS_LIST[1] === "Home")? "ihasq's website" : "ihasq's website > " + CLASS_LIST[1];
               document.querySelector("div.Container.Visible").classList.remove("Visible");
-              document.querySelector(`div.Container#${a.id}`).classList.add("Visible");
+              document.querySelector("div.Container." + CLASS_LIST[1]).classList.add("Visible");
             break;
-            case "CryptoCopy":
-              navigator.clipboard.writeText(CRYPTO_ADDRESS[a.textContent]);
-              document.querySelector("#addressView").textContent = `Copied address: ${CRYPTO_ADDRESS[a.textContent].slice(0,25)}...`;
+            case "Copy":
+              navigator.clipboard.writeText(COPY_ADDRESS[CLASS_LIST[1]][CLASS_LIST[2]]);
+              document.querySelector("label.AddressView." + CLASS_LIST[1]).textContent = "Copied address: " + COPY_ADDRESS[CLASS_LIST[1]][CLASS_LIST[2]].slice(0,25) + "...";
             break;
-            case "SiteLink":
-              window.open(SITE_ADDRESS[a.textContent], "_blank", "noopener noreferrer");
+            case "Site":
+              window.open(SITE_LINK[CLASS_LIST[1]], "_blank", "noopener noreferrer");
             break;
           };
         }, { passive: true });
