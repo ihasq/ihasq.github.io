@@ -43,9 +43,11 @@
         margin: 0;
         padding: 0;
         content-visibility: hidden;
+        visibility: hidden;
       }
       div.Container.Visible {
         content-visibility: visible;
+        visibility: visible;
       }
       ::selection {
         background-color: #000;
@@ -90,23 +92,7 @@
     </div>
     <script>
       {
-        const COPY_ADDRESS = {
-          Crypto: {
-            $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
-            $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
-            $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
-            $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
-            $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"
-          },
-          Pubkey: {
-            Nostr: "npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"
-          }
-        }, SITE_LINK = {
-          GitHub: "https://github.com/ihasq",
-          Twitter: "https://twitter.com/twihasq",
-          Nostr: "https://ihasq.com/nostr-posts-viewer",
-          Zenn: "https://zenn.dev/ihasq"
-        }, clickHandler = a => a.addEventListener("click", () => {
+        const clickHandler = a => a.addEventListener("click", () => {
           const CLASS_LIST = a.classList;
           switch(CLASS_LIST[0]) {
             case "GoTo":
@@ -122,7 +108,25 @@
               window.open(SITE_LINK[CLASS_LIST[1]], "_blank", "noopener noreferrer");
             break;
           };
-        }, { passive: true });
+        }, { passive: true }),
+        COPY_ADDRESS = {
+          Crypto: {
+            $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
+            $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
+            $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
+            $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
+            $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"
+          },
+          Pubkey: {
+            Nostr: "npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"
+          }
+        },
+        SITE_LINK = {
+          GitHub: "https://github.com/ihasq",
+          Twitter: "https://twitter.com/twihasq",
+          Nostr: "https://ihasq.com/nostr-posts-viewer",
+          Zenn: "https://zenn.dev/ihasq"
+        };
         document.querySelectorAll("a").forEach(a => clickHandler(a));
       };
     </script>
