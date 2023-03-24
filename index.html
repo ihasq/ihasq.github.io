@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <!-- Last modified: 2023/03/04 -->
+    <!-- Last modified: 2023/03/24 -->
     <title>ihasq</title>
     <meta charset='utf-8'>
     <link rel="shortcut icon" href="https://ihasq.com/image.webp">
@@ -91,20 +91,19 @@
     <script>
       "use strict";
       {
-        const clickHandler = a => a.addEventListener("click", () => {
-          const CLASS_LIST = a.classList, TEXT_CONTENT = a.textContent;
-          switch(CLASS_LIST[0]) {
+        document.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+          switch(a.className) {
             case "GoTo":
-              document.querySelector(".Header").textContent = "ihasq's website > " + TEXT_CONTENT;
+              document.querySelector(".Header").textContent = `ihasq's website > ${a.textContent}`;
               document.querySelector(".Container.Visible").classList.remove("Visible");
-              document.querySelector(".Container." + TEXT_CONTENT).classList.add("Visible");
+              document.querySelector(`.Container.${a.textContent}`).classList.add("Visible");
               break;
             case "Copy":
-              navigator.clipboard.writeText(COPY_ADDRESS[TEXT_CONTENT]);
-              document.querySelector(".Container.Visible > .AddressView").textContent = "Copied address: " + COPY_ADDRESS[TEXT_CONTENT].slice(0,25) + "...";
+              navigator.clipboard.writeText(COPY_ADDRESS[a.textContent]);
+              document.querySelector(".Container.Visible > .AddressView").textContent = `Copied address: ${COPY_ADDRESS[a.textContent].slice(0,25)}...`;
               break;
             case "Site":
-              window.open(SITE_LINK[TEXT_CONTENT], "_blank", "noopener noreferrer");
+              window.open(SITE_LINK[a.textContent], "_blank", "noopener noreferrer");
               break;
             case "Back":
               document.querySelector(".Header").textContent = "ihasq's website";
@@ -112,8 +111,8 @@
               document.querySelector(".Container.Home").classList.add("Visible");
               break;
           };
-        }, { passive: true }),
-        COPY_ADDRESS = {
+        }, { passive: true }));
+        const COPY_ADDRESS = {
           $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
           $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
           $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
@@ -127,8 +126,7 @@
           Posts: "https://ihasq.com/nostr-posts-viewer",
           Email: "mailto:ihasq@ihasq.com",
           Gists: "https://gist.github.com/ihasq"
-        };
-        document.querySelectorAll("a").forEach(a => clickHandler(a));
+        }
       };
     </script>
   </body>
