@@ -61,69 +61,70 @@
     <label class="Header">ihasq's website</label><br>
     <div class="Wrapper">
       <div class="Container Home Visible">
-        <a class="Site GitHub">GitHub</a></br>
-        <a class="Site Tweets">Tweets</a></br>
-        <a class="GoTo Nostr">Nostr</a></br>
-        <a class="Site Gists">Gists</a></br>
-        <a class="Site Email">Email</a></br>
-        <a class="GoTo Donate">Donate</a></br>
+        <a class="Site">GitHub</a></br>
+        <a class="Site">Tweets</a></br>
+        <a class="GoTo">Nostr</a></br>
+        <a class="Site">Gists</a></br>
+        <a class="Site">Email</a></br>
+        <a class="GoTo">Donate</a></br>
       </div>
       <div class="Container Donate">
-        <label class="AddressView Crypto">Copied address: None</label></br>
+        <label class="AddressView">Copied address: None</label></br>
         </br>
-        <a class="Copy Crypto $BTC">$BTC</a></br>
-        <a class="Copy Crypto $BTC_LN">$BTC_LN</a></br>
-        <a class="Copy Crypto $ETH">$ETH</a></br>
-        <a class="Copy Crypto $LTC">$LTC</a></br>
-        <a class="Copy Crypto $XRP">$XRP</a></br>
+        <a class="Copy">$BTC</a></br>
+        <a class="Copy">$BTC_LN</a></br>
+        <a class="Copy">$ETH</a></br>
+        <a class="Copy">$LTC</a></br>
+        <a class="Copy">$XRP</a></br>
         </br>
-        <a class="GoTo Home">back</a></br>    
+        <a class="Back">back</a></br>    
       </div>
       <div class="Container Nostr">
-        <label class="AddressView Pubkey">Copied address: None</label></br>
+        <label class="AddressView">Copied address: None</label></br>
         </br>
-        <a class="Copy Pubkey Nostr">Pubkey</a></br>
-        <a class="Site Nostr">Posts</a></br>
+        <a class="Copy">Pubkey</a></br>
+        <a class="Site">Posts</a></br>
         </br>
-        <a class="GoTo Home">back</a></br>    
+        <a class="Back">back</a></br>    
       </div>
     </div>
     <script>
       "use strict";
       {
         const clickHandler = a => a.addEventListener("click", () => {
-          const CLASS_LIST = a.classList;
+          const CLASS_LIST = a.classList, TEXT_CONTENT = a.textContent;
           switch(CLASS_LIST[0]) {
             case "GoTo":
-              document.querySelector("label.Header").textContent = (CLASS_LIST[1] === "Home")? "ihasq's website" : "ihasq's website > " + CLASS_LIST[1];
-              document.querySelector("div.Container.Visible").classList.remove("Visible");
-              document.querySelector("div.Container." + CLASS_LIST[1]).classList.add("Visible");
-            break;
+              document.querySelector(".Header").textContent = "ihasq's website > " + TEXT_CONTENT;
+              document.querySelector(".Container.Visible").classList.remove("Visible");
+              document.querySelector(".Container." + TEXT_CONTENT).classList.add("Visible");
+              break;
             case "Copy":
-              navigator.clipboard.writeText(COPY_ADDRESS[CLASS_LIST[1]][CLASS_LIST[2]]);
-              document.querySelector("label.AddressView." + CLASS_LIST[1]).textContent = "Copied address: " + COPY_ADDRESS[CLASS_LIST[1]][CLASS_LIST[2]].slice(0,25) + "...";
-            break;
+              navigator.clipboard.writeText(COPY_ADDRESS[TEXT_CONTENT]);
+              document.querySelector(".Container.Visible > .AddressView").textContent = "Copied address: " + COPY_ADDRESS[TEXT_CONTENT].slice(0,25) + "...";
+              break;
             case "Site":
-              window.open(SITE_LINK[CLASS_LIST[1]], "_blank", "noopener noreferrer");
-            break;
+              window.open(SITE_LINK[TEXT_CONTENT], "_blank", "noopener noreferrer");
+              break;
+            case "Back":
+              document.querySelector(".Header").textContent = "ihasq's website";
+              document.querySelector(".Container.Visible").classList.remove("Visible");
+              document.querySelector(".Container.Home").classList.add("Visible");
+              break;
           };
         }, { passive: true }),
         COPY_ADDRESS = {
-          Crypto: {
-            $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
-            $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
-            $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
-            $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
-            $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU"
-          },
-          Pubkey: {
-            Nostr: "npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"
-          }
+          $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
+          $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
+          $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
+          $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
+          $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
+          Pubkey: "npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"
         },
         SITE_LINK = {
           GitHub: "https://github.com/ihasq",
           Tweets: "https://twitter.com/ihasq",
-          Nostr: "https://ihasq.com/nostr-posts-viewer",
+          Posts: "https://ihasq.com/nostr-posts-viewer",
           Email: "mailto:ihasq@ihasq.com",
           Gists: "https://gist.github.com/ihasq"
         };
