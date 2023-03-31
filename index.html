@@ -1,150 +1,155 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!-- Last modified: 2023/03/24 -->
-    <title>ihasq</title>
-    <meta charset='utf-8'>
-    <link rel="shortcut icon" href="https://ihasq.com/image.webp">
-    <style>
-      @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
-      body {
-        font-family: 'JetBrains Mono';
-        font-weight: 400;
-        background-color:#22f;
-        color:#fff;
-        cursor: default;
-        margin-left: 6vw;
-        margin-top: 30vh;
-        margin-bottom: 0px;
-        overflow: hidden;
-      }
-      header {
-        font-size: 40px;
-      }
-      label.Header, a {
-        font-size: 40px;
-        color: #fff;
-        text-decoration: none;
-        line-height: 50px;
-      }
-      a:hover {
-        text-decoration: underline;
-        cursor: pointer;
-      }
-      div.Wrapper {
-        margin-top: 42px;
-        text-decoration: none;
-        cursor: normal;
-      }
-      div.Container {
-        margin: 0;
-        padding: 0;
-        content-visibility: hidden;
-        visibility: hidden;
-      }
-      div.Container.Visible {
-        content-visibility: visible;
-        visibility: visible;
-      }
-      ::selection {
-        background-color: #000;
-      }
-      br::selection {
-        background: none;
-      }
-    </style>
-    <script>
-      const neofetch = () => console.log([
-        "\x1b[34m                 .^7!~       \x1b[0m   \x1b[1;31mihasq\x1b[0m@\x1b[1;31mihasq.com",
-        "       .  :7..:?JJJJY~:.     \x1b[0m   ---------------",
-        "      !YJ^.?YYPBP5B5YPPY7.   \x1b[0m   \x1b[1;31mOS\x1b[0m: Debian GNU/Linux 11 (bullseye) x86_64",
-        "  .:^.!5BPJ5GJJPPP5GGBPY5^.  \x1b[0m   \x1b[1;31mHost\x1b[0m: XPS 13 9310",
-        "  ~Y77~?YGG57.:77^..:!!JP!?: \x1b[0m   \x1b[1;31mCPU\x1b[0m: 11th Gen Intel i7-1185G7 (8) @ 4.800GHz",
-        "  !Y5!JJP57~!7!JGBJ .^:.J5P^ \x1b[0m   \x1b[1;31mGPU\x1b[0m: Intel TigerLake GT2 [Iris Xe Graphics]",
-        " ~5PG5?!7.    ..!~  7GY!?PJ~ \x1b[0m   \x1b[1;31mMemory\x1b[0m: 15717MiB",
-        " ?P55B?~~.       :. .^^:YY   \x1b[0m   \x1b[1;31mGitHub\x1b[0m: https://github.com/ihasq",
-        " :77??J^:...    .JPY~   7~   \x1b[0m   \x1b[1;31mTweets\x1b[0m: https://twitter.com/ihasq",
-        "   7Y57:::. .  .!~JY: ..     \x1b[0m   \x1b[1;31mNostr\x1b[0m: https://nostr.directory/p/ihasq",
-        "   7Y5!:^!~^^.  .^:^:...     \x1b[0m   \x1b[1;31mGists\x1b[0m: https://gist.github.com/ihasq",
-        "   ?PP~!^^^^^~~~^^:. .^^.    \x1b[0m   \x1b[1;31mEmail\x1b[0m: mailto://ihasq@ihasq.com",
-        "   .7P!JY!7?77!~~^~!.   ..   \x1b[0m   \x1b[1;31m$BTC\x1b[0m: 13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
-        "     !!7Y77?J55J77~:         \x1b[0m   \x1b[1;31m$ETH\x1b[0m: 0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
-        "      ^^.....~77JYJ?^        \x1b[0m   \x1b[1;31m$XRP\x1b[0m: rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
-      ].join("\x1b[0m\n\x1b[34m"));
-      neofetch();
-    </script>
-  </head>
-  <body>
-    <label class="Header">ihasq's website</label><br>
-    <div class="Wrapper">
-      <div class="Container Home Visible">
-        <a class="Site">GitHub</a></br>
-        <a class="Site">Tweets</a></br>
-        <a class="GoTo">Nostr</a></br>
-        <a class="Site">Gists</a></br>
-        <a class="Site">Email</a></br>
-        <a class="GoTo">Donate</a></br>
-      </div>
-      <div class="Container Donate">
-        <label class="AddressView">Copied address: None</label></br>
-        </br>
-        <a class="Copy">$BTC</a></br>
-        <a class="Copy">$BTC_LN</a></br>
-        <a class="Copy">$ETH</a></br>
-        <a class="Copy">$LTC</a></br>
-        <a class="Copy">$XRP</a></br>
-        </br>
-        <a class="Back">back</a></br>    
-      </div>
-      <div class="Container Nostr">
-        <label class="AddressView">Copied address: None</label></br>
-        </br>
-        <a class="Copy">Pubkey</a></br>
-        <a class="Site">Posts</a></br>
-        </br>
-        <a class="Back">back</a></br>    
-      </div>
-    </div>
-    <script>
-      "use strict";
-      {
-        document.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
-          switch(a.className) {
-            case "GoTo":
-              document.querySelector(".Header").textContent = `ihasq's website > ${a.textContent}`;
-              document.querySelector(".Container.Visible").classList.remove("Visible");
-              document.querySelector(`.Container.${a.textContent}`).classList.add("Visible");
-              break;
-            case "Copy":
-              navigator.clipboard.writeText(COPY_ADDRESS[a.textContent]);
-              document.querySelector(".Container.Visible > .AddressView").textContent = `Copied address: ${COPY_ADDRESS[a.textContent].slice(0,25)}...`;
-              break;
-            case "Site":
-              window.open(SITE_LINK[a.textContent], "_blank", "noopener noreferrer");
-              break;
-            case "Back":
-              document.querySelector(".Header").textContent = "ihasq's website";
-              document.querySelector(".Container.Visible").classList.remove("Visible");
-              document.querySelector(".Container.Home").classList.add("Visible");
-              break;
-          };
-        }, { passive: true }));
-        const COPY_ADDRESS = {
-          $BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
-          $BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
-          $ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
-          $LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
-          $XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
-          Pubkey: "npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"
-        },
-        SITE_LINK = {
-          GitHub: "https://github.com/ihasq",
-          Tweets: "https://twitter.com/ihasq",
-          Posts: "https://ihasq.com/nostr-posts-viewer",
-          Email: "mailto://ihasq@ihasq.com",
-          Gists: "https://gist.github.com/ihasq"
-        }
-      };
-    </script>
-  </body>
+	<head>
+		<!--
+			Last modified: 2023/03/31
+			ihasq's website
+			author: ihasq
+			this HTML document file was licensed by Mozilla Public License 2.0
+		-->
+		<title>ihasq</title>
+		<meta charset='utf-8'>
+		<link rel="shortcut icon" href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAgICAgJCAkKCgkNDgwODRMREBARExwUFhQWFBwrGx8bGx8bKyYuJSMlLiZENS8vNUROQj5CTl9VVV93cXecnNEBCAgICAkICQoKCQ0ODA4NExEQEBETHBQWFBYUHCsbHxsbHxsrJi4lIyUuJkQ1Ly81RE5CPkJOX1VVX3dxd5yc0f/CABEIABgAGAMBIgACEQEDEQH/xAAtAAEAAgMBAAAAAAAAAAAAAAAAAgUDBAYHAQEBAAAAAAAAAAAAAAAAAAAEBf/aAAwDAQACEAMQAAAA9f46NrcnbjACidCPL34lO//EACUQAAICAAUEAwEBAAAAAAAAAAECAwQABRESIQYTUWIiMYEy0f/aAAgBAQABPwDNc2rZZWlmk+bIm/tqfkV101xe6xtyKy0KUjKWYCZEZh5Gnt5x03nyZtXKsGE0WgYsdd/tjqaO5Ln0KHiB4QiEEA6H7I/cWssyrL61S0HtRRVZFfZE/Lef9bGV5ZdTODbsTIwWt/SJtD9wng+yjHUlK1I9G5XG8wb1Memuu8YN6eBxWuV+3ESGUTgOh8ewxWjKJw4ZG0ZeOR+j7GP/xAAfEQACAgICAwEAAAAAAAAAAAABAgMRAEEEExIhMnH/2gAIAQIBAT8Ahi4sSQM6djv7A1+ZyhEJj1V4kXQ1nBbtRI2UULo7G8b6Of/EABsRAAICAwEAAAAAAAAAAAAAAAECAAMREjEE/9oACAEDAQE/AHe52sCtqqykuUG/RPSNGZwTk4g4J//Z">
+		<style>
+			@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+		  	body {
+				font-family: 'JetBrains Mono';
+				font-weight: 400;
+				background-color:#22f;
+				color:#fff;
+				cursor: default;
+				margin-left: 6vw;
+				margin-top: 30vh;
+				margin-bottom: 0px;
+				overflow: hidden;
+		  	}
+		  	header {
+				font-size: 40px;
+		  	}
+		  	label.Header, a {
+				font-size: 40px;
+				color: #fff;
+				text-decoration: none;
+				line-height: 50px;
+		  	}
+		  	a:hover {
+				text-decoration: underline;
+				cursor: pointer;
+			}
+		  	div.Wrapper {
+				margin-top: 42px;
+				text-decoration: none;
+				cursor: normal;
+		  	}
+		  	div.Container {
+				height: 0px;
+				margin: 0;
+				padding: 0;
+				visibility: hidden;
+		  	}
+		  	div.Container.Visible {
+				height: 100%;
+				visibility: visible;
+			}
+		  	::selection {
+				background-color: #000;
+		  	}
+		  	br::selection {
+				background: none;
+		  	}
+		</style>
+		<script>
+			const neofetch = () => console.log("\x1b[34m" + [
+				"                 .^7!~       \x1b[0m   \x1b[1;31mihasq\x1b[0m@\x1b[1;31mihasq.com",
+				"       .  :7..:?JJJJY~:.     \x1b[0m   ---------------",
+				"      !YJ^.?YYPBP5B5YPPY7.   \x1b[0m   \x1b[1;31mOS\x1b[0m: Debian GNU/Linux 11 (bullseye) x86_64",
+				"  .:^.!5BPJ5GJJPPP5GGBPY5^.  \x1b[0m   \x1b[1;31mHost\x1b[0m: XPS 13 9310",
+				"  ~Y77~?YGG57.:77^..:!!JP!P: \x1b[0m   \x1b[1;31mCPU\x1b[0m: 11th Gen Intel i7-1185G7 (8) @ 4.800GHz",
+				"  !Y5!JJN57~!7!IPSJ .^:.J5P^ \x1b[0m   \x1b[1;31mGPU\x1b[0m: Intel TigerLake GT2 [Iris Xe Graphics]",
+				" ~5PGP?!7.    ..!~  JUN!?PJ~ \x1b[0m   \x1b[1;31mMemory\x1b[0m: 15717MiB",
+				" ?P55B?~~.       :. .^^:YY   \x1b[0m   \x1b[1;31mGitHub\x1b[0m: https://github.com/ihasq",
+				" :77??J^:...    .BTC~   7~   \x1b[0m   \x1b[1;31mTweets\x1b[0m: https://twitter.com/ihasq",
+				"   7Y57:::. .  .!~JY: ..     \x1b[0m   \x1b[1;31mNostr\x1b[0m: https://nostr.directory/p/ihasq",
+				"   7Y5!:^!~^^.  .^:^:...     \x1b[0m   \x1b[1;31mGists\x1b[0m: https://gist.github.com/ihasq",
+				"   ?PP~!^^^^^~~~^^:. .^^.    \x1b[0m   \x1b[1;31mEmail\x1b[0m: mailto://ihasq@ihasq.com",
+   		 		"   .7P!JY!7?77!~~^~!.   ..   \x1b[0m   \x1b[1;31m$BTC\x1b[0m: 13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
+   		 		"     !!7Y77?J55J77~:         \x1b[0m   \x1b[1;31m$ETH\x1b[0m: 0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
+   		 		"      ^^.....~77JYJ?^        \x1b[0m   \x1b[1;31m$XRP\x1b[0m: rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
+   	   		].join("\x1b[0m\n\x1b[34m"));
+   	   		neofetch();
+		</script>
+	</head>
+	<body>
+   		<label class="Header">ihasq's website</label><br>
+   		<div class="Wrapper">
+   		   	<div class="Container Home Visible">
+   		 		<a class="Site">GitHub</a></br>
+   		 		<a class="Site">Tweets</a></br>
+   		 		<a class="GoTo">Nostr</a></br>
+   		 		<a class="Site">Gists</a></br>
+   		 		<a class="Site">Email</a></br>
+   				<a class="GoTo">Donate</a></br>
+			</div>
+			<div class="Container Donate">
+				<label class="AddressView">Copied address: None</label></br>
+				</br>
+				<a class="Copy">$BTC</a></br>
+				<a class="Copy">$BTC_LN</a></br>
+				<a class="Copy">$ETH</a></br>
+				<a class="Copy">$LTC</a></br>
+				<a class="Copy">$XRP</a></br>
+				</br>
+				<a class="Back">back</a></br>
+			</div>
+			<div class="Container Nostr">
+				<label class="AddressView">Copied address: None</label></br>
+				</br>
+				<a class="Copy">Pubkey</a></br>
+				<a class="Site">Posts</a></br>
+				</br>
+				<a class="Back">back</a></br>
+	  		</div>
+		</div>
+		<script>
+	  		"use strict";
+	  		{
+			document.querySelectorAll("a").forEach(a => a.addEventListener("click", () => {
+	  			switch(a.className) {
+				case "GoTo":
+	  				document.querySelector(".Header").textContent = `ihasq's website > ${a.textContent}`;
+	 				document.querySelector(".Container.Visible").classList.remove("Visible");
+					document.querySelector(`.Container.${a.textContent}`).classList.add("Visible");
+					break;
+				case "Copy":
+	  				navigator.clipboard.writeText(COPY_ADDRESS[a.textContent]);
+	  				document.querySelector(".Container.Visible > .AddressView").textContent = `Copied address: ${COPY_ADDRESS[a.textContent].slice(0,25)}...`;
+	  				break;
+				case "Site":
+	  				window.open(SITE_LINK[a.textContent], "_blank", "noopener noreferrer");
+	  				break;
+				case "Back":
+	  				document.querySelector(".Header").textContent = "ihasq's website";
+	  				document.querySelector(".Container.Visible").classList.remove("Visible");
+	  				document.querySelector(".Container.Home").classList.add("Visible");
+	  					break;
+	  				};
+				}, { passive: true }));
+				const COPY_ADDRESS = {
+	  				$BTC: "13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
+	  				$BTC_LN: "lnbc1p37mdswpp55aa2ux8x04u56xd5m224ywg8pcncyjzne3g9k2lnjwau6ulkj5nsdqu2askcmr9wssx7e3q2dshgmmndp5scqzpgxqyz5vqsp59hmg7q3m2znd8lf33rjrd7v7xejvhuqpwwefpreagcjl7l4ewnds9qyyssqjszgypta75wqddv4pugudqep2tfjmc735zxxklvn3852c36vet6qj86fc25fnlnyvh4e72vkpthmarxns4s535868g63g8z2ln3f82sp9c8mw2",
+			  		$ETH: "0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
+			  		$LTC: "ltc1qhdq0fp3xaudgtzrqtw2kjjqval6vf2926rgen7",
+	  				$XRP: "rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
+	  				Pubkey: "npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc"
+				},
+				SITE_LINK = {
+	  				GitHub: "https://github.com/ihasq",
+	  				Tweets: "https://twitter.com/ihasq",
+			  		Posts: "https://ihasq.com/nostr-posts-viewer",
+			  		Email: "mailto://ihasq@ihasq.com",
+	  				Gists: "https://gist.github.com/ihasq"
+				}
+	  		};
+		</script>
+  	</body>
 </html>
