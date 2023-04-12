@@ -25,6 +25,28 @@
 					"      ^^.....~77JYJ?^        \x1b[0m   \x1b[1;31m$XRP\x1b[0m: rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
 				].join("\x1b[0m\n\x1b[34m").replaceAll((window.navigator.userAgent.toLowerCase().indexOf("chrome") != -1)? "" : RegExp("\\x1b\\[(0|1;31|1;32|34)m", "g"), "")
 			);
+			const key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh", randomEvents = event => {
+				resultArray.push(event.key);
+				if(resultArray.length === 10) {
+					if(atob(key) === resultArray.toString()) {
+						const selectionIndex = Math.floor(Math.random() * (secrets.length - count))
+						secrets[selectionIndex]();
+						secrets.splice(secrets.length, 0, secrets[selectionIndex]);
+						secrets.splice(selectionIndex, 1)
+						count += 1;
+						count %= secrets.length;
+					};
+					resultArray.shift();
+				};
+			};
+			let secrets = [
+				() => window.open("https://www.youtube.com/watch?v=wfd6eNx8Sxk", "_blank"),
+				() => window.open("https://www.youtube.com/watch?v=zss5tTEpWuQ", "_blank"),
+				() => window.open("https://www.youtube.com/watch?v=uB_jQ8H2Yeg", "_blank"),
+				() => window.open("https://www.youtube.com/watch?v=UFQEttrn6CQ", "_blank"),
+				() => window.open("https://www.youtube.com/watch?v=A4fcb5LV1F8", "_blank"),
+				() => window.open("https://www.youtube.com/watch?v=mHP6-D-yBEw", "_blank")
+			], resultArray = new Array(), count = 0;
         </script>
 	</head>
 	<body style="font-family: monospace; font-size: 16px;">
@@ -34,5 +56,13 @@
 		<a href="https://gist.github.com/ihasq/">gist</a>
 		<a href="mailto://ihasq@ihasq.com/">email</a>
 		<a href="http://www.wtfpl.net/txt/copying/">license</a>
+		<script>
+			document.querySelectorAll("a").forEach(el => {
+				if (el.textContent !== "email") {
+					el.setAttribute("target", "_blank");
+				};
+			});
+			document.body.addEventListener("keyup", event => randomEvents(event));
+		</script>
 	</body>
 </html>
