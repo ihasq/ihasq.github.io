@@ -4,11 +4,71 @@
 		<title>ihasq</title>
 		<meta charset="utf-8"/>
 		<link rel="shortcut icon" href="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAgICAgJCAkKCgkNDgwODRMREBARExwUFhQWFBwrGx8bGx8bKyYuJSMlLiZENS8vNUROQj5CTl9VVV93cXecnNEBCAgICAkICQoKCQ0ODA4NExEQEBETHBQWFBYUHCsbHxsbHxsrJi4lIyUuJkQ1Ly81RE5CPkJOX1VVX3dxd5yc0f/CABEIABgAGAMBIgACEQEDEQH/xAAtAAEAAgMBAAAAAAAAAAAAAAAAAgUDBAYHAQEBAAAAAAAAAAAAAAAAAAAEBf/aAAwDAQACEAMQAAAA9f46NrcnbjACidCPL34lO//EACUQAAICAAUEAwEBAAAAAAAAAAECAwQABRESIQYTUWIiMYEy0f/aAAgBAQABPwDNc2rZZWlmk+bIm/tqfkV101xe6xtyKy0KUjKWYCZEZh5Gnt5x03nyZtXKsGE0WgYsdd/tjqaO5Ln0KHiB4QiEEA6H7I/cWssyrL61S0HtRRVZFfZE/Lef9bGV5ZdTODbsTIwWt/SJtD9wng+yjHUlK1I9G5XG8wb1Memuu8YN6eBxWuV+3ESGUTgOh8ewxWjKJw4ZG0ZeOR+j7GP/xAAfEQACAgICAwEAAAAAAAAAAAABAgMRAEEEExIhMnH/2gAIAQIBAT8Ahi4sSQM6djv7A1+ZyhEJj1V4kXQ1nBbtRI2UULo7G8b6Of/EABsRAAICAwEAAAAAAAAAAAAAAAECAAMREjEE/9oACAEDAQE/AHe52sCtqqykuUG/RPSNGZwTk4g4J//Z"/>
-	</head>
-	<body style="font-family: monospace; font-size: 16px;">
+
+		<!-- body -->
+
+		<template id="body">
+			ihasq's website<br>
+			<br>
+			<a href="javascript:show('about')">about</a>
+			<a href="https://github.com/ihasq/" target="_blank">github</a>
+			<a href="https://twitter.com/ihasq/" target="_blank">twitter</a>
+			<a href="https://nostr.directory/p/ihasq/" target="_blank">nostr</a>
+			<a href="https://gist.github.com/ihasq/" target="_blank">gist</a>
+			<a href="mailto:ihasq@ihasq.com/">email</a>
+			<a href="http://www.wtfpl.net/txt/copying/" target="_blank">license</a>
+		</template>
+		<script type="text/babel" id="body">
+			const key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh";
+			let secrets = [
+				() => open("https://www.youtube.com/watch?v=wfd6eNx8Sxk", "_blank"),
+				() => open("https://www.youtube.com/watch?v=zss5tTEpWuQ", "_blank"),
+				() => open("https://www.youtube.com/watch?v=uB_jQ8H2Yeg", "_blank"),
+				() => open("https://www.youtube.com/watch?v=UFQEttrn6CQ", "_blank"),
+				() => open("https://www.youtube.com/watch?v=A4fcb5LV1F8", "_blank"),
+				() => open("https://www.youtube.com/watch?v=mHP6-D-yBEw", "_blank")
+			];
+			let resultArray = [];
+			let count = 0;
+
+			function command(event) {
+				resultArray.push(event.key);
+				if(resultArray.length === 10) {
+					if(atob(key) === resultArray.toString()) {
+						doRandomThings();
+					};
+					resultArray.shift();
+				};
+			};
+
+			function doRandomThings() {
+				const selectionIndex = Math.floor(Math.random() * (secrets.length - count))
+				secrets[selectionIndex]();
+				secrets.splice(secrets.length, 0, secrets[selectionIndex]);
+				secrets.splice(selectionIndex, 1);
+				count++;
+				count %= secrets.length;
+			};
+			document.body.addEventListener("keyup", event => command(event));
+		</script>
+
+		<!-- about -->
+
+		<template id="about">
+			ihasq (2002 ~ present)<br>
+			<br>
+			region: japan<br>
+			skill: programming<br>
+			project: evolt, evolt.js<br>
+			language: js, rust, c<br>
+			major: commerce<br>
+			<br>
+			<a href="javascript:show('body')">back</a>
+		</template>
+
 		<script>
-			"use strict";
-			
+			var kill = new CustomEvent("killAll");
+			var opened = [], active = "";
 			function neofetch() {
 				console.log(
 					[
@@ -31,51 +91,30 @@
 					].join("\x1b[0m\n\x1b[34m").replaceAll((window.navigator.userAgent.toLowerCase().indexOf("chrome") != -1)? "" : RegExp("\\x1b\\[(0|1;31|1;32|34)m", "g"), "")
 				);
 			};
-
-			{
-
-				function randomEvents(event) {
-					resultArray.push(event.key);
-					if(resultArray.length === 10) {
-						if(atob(key) === resultArray.toString()) {
-							const selectionIndex = Math.floor(Math.random() * (secrets.length - count))
-							secrets[selectionIndex]();
-							secrets.splice(secrets.length, 0, secrets[selectionIndex]);
-							secrets.splice(selectionIndex, 1);
-							count++;
-							count %= secrets.length;
-						};
-						resultArray.shift();
-					};
+			neofetch();
+			function show(arg) {
+				document.body.innerHTML = document.querySelector(`template#${arg}`).innerHTML;
+				if(!opened.includes(arg)){
+					const getFunction = document.querySelector(`script[type="text/babel"]#${arg}`);
+					if(getFunction){
+						Function(getFunction.textContent)();
+					}
+					opened.push(arg);
 				};
-
-				const key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh";
-				const bodyElement = `
-					<a href="https://github.com/ihasq/" target="_blank">github</a>
-					<a href="https://twitter.com/ihasq/" target="_blank">twitter</a>
-					<a href="https://nostr.directory/p/ihasq/" target="_blank">nostr</a>
-					<a href="https://gist.github.com/ihasq/" target="_blank">gist</a>
-					<a href="mailto://ihasq@ihasq.com/">email</a>
-					<a href="http://www.wtfpl.net/txt/copying/" target="_blank">license</a>
-				`;
-
-				let secrets = [
-					() => open("https://www.youtube.com/watch?v=wfd6eNx8Sxk", "_blank"),
-					() => open("https://www.youtube.com/watch?v=zss5tTEpWuQ", "_blank"),
-					() => open("https://www.youtube.com/watch?v=uB_jQ8H2Yeg", "_blank"),
-					() => open("https://www.youtube.com/watch?v=UFQEttrn6CQ", "_blank"),
-					() => open("https://www.youtube.com/watch?v=A4fcb5LV1F8", "_blank"),
-					() => open("https://www.youtube.com/watch?v=mHP6-D-yBEw", "_blank")
-				];
-				let resultArray = [];
-				let count = 0;
-
-				document.body.insertAdjacentHTML("beforeend", bodyElement);
-				document.body.addEventListener("keyup", event => randomEvents(event));
-				neofetch();
-
 			};
-
 		</script>
-	</body>
+		<style>
+			* {
+				font-family: monospace;
+				font-size: 16px;
+			}
+			:link, :visited {
+				color: #00f
+			}
+			br::selection {
+				background-color: transparent;
+			}
+		</style>
+	</head>
+	<body onload="show('body')"></body>
 </html>
