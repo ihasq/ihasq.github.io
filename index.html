@@ -19,8 +19,10 @@
 			<a href="mailto:ihasq@ihasq.com">email</a>
 			<a href="javascript:show('wtfpl')">license</a>
 		</template>
-		<script type="text/babel" id="body">
+		<script id="body" type="text/babel">
+
 			const key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh";
+
 			let secrets = [
 				() => open("https://www.youtube.com/watch?v=wfd6eNx8Sxk", "_blank"),
 				() => open("https://www.youtube.com/watch?v=zss5tTEpWuQ", "_blank"),
@@ -32,7 +34,9 @@
 				() => open("https://www.youtube.com/watch?v=sGNOLLOfFwM", "_blank"),
 				() => open("https://www.youtube.com/watch?v=TsYZhJqfGHU", "_blank"),
 			];
+
 			let resultArray = [];
+
 			let count = 0;
 
 			function command(event) {
@@ -53,7 +57,9 @@
 				count++;
 				count %= secrets.length;
 			};
+
 			document.body.addEventListener("keyup", event => command(event));
+
 		</script>
 
 		<!-- about -->
@@ -68,6 +74,8 @@
 			<a href="javascript:show('body')">back</a>
 		</template>
 
+		<!-- nostr -->
+
 		<template id="nostr">
 			<p>ihasq's nostr links</p>
 			<p><a href="javascript:{navigator.clipboard.writeText('npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc');alert('copied')}">npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc</a> (click to copy)</p>
@@ -75,12 +83,14 @@
 			<p><a href="https://www.nostr.directory/p/ihasq" target="_blank">nostr.directory</a></p>
 			<a href="javascript:show('body')">back</a>
 		</template>
+
+		<!-- wtfpl -->
 		
 		<template id="wtfpl">
 			<pre id="wtfpl_placeholder"></pre>
 			<a href="javascript:show('body')">back</a>
 		</template>
-		<script type="text/babel" id="wtfpl" always>
+		<script id="wtfpl" type="text/babel" always>
 			document.querySelector("pre#wtfpl_placeholder").textContent = [
 				"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
 				"                   Version 2, December 2004",
@@ -98,6 +108,8 @@
 			].join("\n");
 		</script>
 
+		<!-- playlist -->
+
 		<template id="playlist">
 			<p>ihasq's music playlist</p>
 			<pre>Helsinki Lambda Club - Good News Is Bad News <a href="https://www.youtube.com/watch?v=TsYZhJqfGHU" target="_blank">youtube</a></pre>
@@ -109,7 +121,9 @@
 		</template>
 
 		<script>
+
 			var opened = [];
+
 			function neofetch() {
 				console.log(
 					[
@@ -132,18 +146,21 @@
 					].join("\x1b[0m\n\x1b[34m").replaceAll((window.navigator.userAgent.toLowerCase().indexOf("chrome") != -1)? "" : RegExp("\\x1b\\[(0|1;31|1;32|34)m", "g"), "")
 				);
 			};
+
 			neofetch();
+
 			function show(arg) {
 				document.body.innerHTML = document.querySelector(`template#${arg}`).innerHTML;
 				document.querySelectorAll(`script[type="text/babel"]#${arg}`).forEach(fn => {
 					if(!opened.includes(arg)) {
 						Function(fn.textContent)();
 						if(!fn.hasAttribute("always")) {
-							opened.push(arg)
+							opened.push(arg);
 						};
 					};
 				});
 			};
+			
 		</script>
 		<style>
 			* {
