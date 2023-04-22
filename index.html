@@ -80,7 +80,7 @@
 			<pre id="wtfpl_placeholder"></pre>
 			<a href="javascript:show('body')">back</a>
 		</template>
-		<script type="text/babel" id="wtfpl">
+		<script type="text/babel" id="wtfpl" always>
 			document.querySelector("pre#wtfpl_placeholder").textContent = [
 				"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
 				"                   Version 2, December 2004",
@@ -109,7 +109,7 @@
 		</template>
 
 		<script>
-			var opened = [], active = "";
+			var opened = [];
 			function neofetch() {
 				console.log(
 					[
@@ -135,13 +135,14 @@
 			neofetch();
 			function show(arg) {
 				document.body.innerHTML = document.querySelector(`template#${arg}`).innerHTML;
-				if(!opened.includes(arg)){
-					const getFunction = document.querySelector(`script[type="text/babel"]#${arg}`);
-					if(getFunction){
-						Function(getFunction.textContent)();
+				document.querySelectorAll(`script[type="text/babel"]#${arg}`).forEach(fn => {
+					if(!opened.includes(arg)) {
+						Function(fn.textContent)();
+						if(!fn.hasAttribute("always")) {
+							opened.push(arg)
+						};
 					};
-					opened.push(arg);
-				};
+				});
 			};
 		</script>
 		<style>
