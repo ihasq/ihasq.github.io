@@ -59,56 +59,52 @@
 		<!-- about -->
 
 		<template id="about">
-			ihasq (2002 ~ present)<br>
-			<br>
+			<p>ihasq (2002 ~ present)</p>
 			<pre>region:   japan</pre>
 			<pre>skill:    programming</pre>
 			<pre>project:  evolt, evolt.js</pre>
 			<pre>language: js, rust, c, scratch</pre>
 			<pre>major:    commerce</pre>
-			<br>
 			<a href="javascript:show('body')">back</a>
 		</template>
 
 		<template id="nostr">
-			ihasq's nostr pubkey (click to copy)<br>
-			<br>
-			<a href="javascript:{navigator.clipboard.writeText('npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc');alert('copied')}">npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc</a><br>
-			<br>
+			<p>ihasq's nostr links</p>
+			<p><a href="javascript:{navigator.clipboard.writeText('npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc');alert('copied')}">npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc</a> (click to copy)</p>
+			<p><a href="https://ihasq.com/.well-known/nostr.json?name=ihasq" target="_blank">nip-07</a></p>
+			<p><a href="https://www.nostr.directory/p/ihasq" target="_blank">nostr.directory</a></p>
 			<a href="javascript:show('body')">back</a>
 		</template>
 		
 		<template id="wtfpl">
-			<pre>           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE</pre>
-			<pre>                   Version 2, December 2004</pre>
-			<br>
-			<pre>Copyright (C) 2004 Sam Hocevar <a href="mailto:sam@hocevar.net">&lt;sam@hocevar.net&gt;</a></pre>
-			<br>
-			<pre>Everyone is permitted to copy and distribute verbatim or modified</pre>
-			<pre>copies of this license document, and changing it is allowed as long</pre>
-			<pre>as the name is changed.</pre>
-			<br>
-			<pre>           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE</pre>
-			<pre>  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION</pre>
-			<br>
-			<pre>0. You just DO WHAT THE FUCK YOU WANT TO.</pre>
-			<br>
+			<pre id="wtfpl_placeholder"></pre>
 			<a href="javascript:show('body')">back</a>
 		</template>
+		<script type="text/babel" id="wtfpl">
+			document.querySelector("pre#wtfpl_placeholder").textContent = [
+				"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
+				"                   Version 2, December 2004",
+				"",
+				"Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>",
+				"",
+				"Everyone is permitted to copy and distribute verbatim or modified",
+				"copies of this license document, and changing it is allowed as long",
+				"as the name is changed.",
+				"",
+				"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
+				"  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION",
+				"",
+				" 0. You just DO WHAT THE FUCK YOU WANT TO.",
+			].join("\n");
+		</script>
 
 		<template id="playlist">
-			ihasq's music playlist<br>
-			<br>
+			<p>ihasq's music playlist</p>
 			<pre>Helsinki Lambda Club - Good News Is Bad News <a href="https://www.youtube.com/watch?v=TsYZhJqfGHU" target="_blank">youtube</a></pre>
-			<br>
 			<pre>AC Club - Hato Ni Komattara Amemiya <a href="https://www.youtube.com/watch?v=Ymnfiq0BtAY" target="_blank">youtube</a></pre>
-			<br>
 			<pre>taufuclub - Michikusa <a href="https://www.youtube.com/watch?v=KwlNVH51tng" target="_blank">youtube</a></pre>
-			<br>
 			<pre>Ichiko Aoba - Ikinokori Bokura <a href="https://www.youtube.com/watch?v=4kzYOqNRrco" target="_blank">youtube</a></pre>
-			<br>
 			<pre>Back Number - Kaitou <a href="https://www.youtube.com/watch?v=1DPldNasDgY" target="_blank">youtube</a></pre>
-			<br>
 			<a href="javascript:show('body')">back</a>
 		</template>
 
@@ -143,7 +139,7 @@
 					const getFunction = document.querySelector(`script[type="text/babel"]#${arg}`);
 					if(getFunction){
 						Function(getFunction.textContent)();
-					}
+					};
 					opened.push(arg);
 				};
 			};
@@ -159,8 +155,9 @@
 			br::selection {
 				background-color: transparent;
 			}
-			pre {
-				margin: 0px;
+			p, pre {
+				margin-top: 0px;
+				margin-bottom: 16px;
 			}
 		</style>
 	</head>
