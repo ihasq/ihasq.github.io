@@ -21,23 +21,44 @@
 		</template>
 		<script id="body" type="text/babel">
 
-			const key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh";
+			function neofetch() {
+				console.log(
+					[
+						"\x1b[1;32mihasq@ihasq.com\x1b[0m: $ neofetch --ascii_distro ihasq",
+						"                 .^7!~       \x1b[0m   \x1b[1;31mihasq\x1b[0m@\x1b[1;31mihasq.com",
+						"       .  :7..:?JJJJY~:.     \x1b[0m   ---------------",
+						"      !YJ^.?YYPBP5B5YPPY7.   \x1b[0m   \x1b[1;31mOS\x1b[0m: Debian GNU/Linux 11 (bullseye) x86_64",
+						"  .:^.!5BPJ5GJJPPP5GGBPY5^.  \x1b[0m   \x1b[1;31mHost\x1b[0m: XPS 13 9310",
+						"  ~Y77~?YGG57.:77^..:!!JP!P: \x1b[0m   \x1b[1;31mCPU\x1b[0m: 11th Gen Intel i7-1185G7 (8) @ 4.800GHz",
+						"  !Y5!JJN57~!7!IPSJ .^:.J5P^ \x1b[0m   \x1b[1;31mGPU\x1b[0m: Intel TigerLake GT2 [Iris Xe Graphics]",
+						" ~5PGP?!7.    ..!~  JUN!?PJ~ \x1b[0m   \x1b[1;31mMemory\x1b[0m: 15717MiB",
+						" ?P55B?~~.       :. .^^:YY   \x1b[0m   \x1b[1;31mGitHub\x1b[0m: https://github.com/ihasq",
+						" :77??J^:...    .BTC~   7~   \x1b[0m   \x1b[1;31mTwitter\x1b[0m: https://twitter.com/ihasq",
+						"   7Y57:::. .  .!~JY: ..     \x1b[0m   \x1b[1;31mNostr\x1b[0m: https://nostr.directory/p/ihasq",
+						"   7Y5!:^!~^^.  .^:^:...     \x1b[0m   \x1b[1;31mGist\x1b[0m: https://gist.github.com/ihasq",
+						"   ?PP~!^^^^^~~~^^:. .^^.    \x1b[0m   \x1b[1;31mEmail\x1b[0m: mailto://ihasq@ihasq.com",
+						"   .7P!JY!7?77!~~^~!.   ..   \x1b[0m   \x1b[1;31m$BTC\x1b[0m: 13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
+						"     !!7Y77?J55J77~:         \x1b[0m   \x1b[1;31m$ETH\x1b[0m: 0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
+						"      ^^.....~77JYJ?^        \x1b[0m   \x1b[1;31m$XRP\x1b[0m: rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
+					].join("\x1b[0m\n\x1b[34m").replaceAll((window.navigator.userAgent.toLowerCase().indexOf("chrome") != -1)? "" : RegExp("\\x1b\\[(0|1;31|1;32|34)m", "g"), "")
+				);
+			};
+			
+			neofetch();
+
+			const openyt = arg => open("https://www.youtube.com/watch?v=" + arg, "_blank"), key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh";
 
 			let secrets = [
-				() => open("https://www.youtube.com/watch?v=wfd6eNx8Sxk", "_blank"),
-				() => open("https://www.youtube.com/watch?v=zss5tTEpWuQ", "_blank"),
-				() => open("https://www.youtube.com/watch?v=uB_jQ8H2Yeg", "_blank"),
-				() => open("https://www.youtube.com/watch?v=UFQEttrn6CQ", "_blank"),
-				() => open("https://www.youtube.com/watch?v=A4fcb5LV1F8", "_blank"),
-				() => open("https://www.youtube.com/watch?v=mHP6-D-yBEw", "_blank"),
-				() => open("https://www.youtube.com/watch?v=sWOvhZBS9IA", "_blank"),
-				() => open("https://www.youtube.com/watch?v=sGNOLLOfFwM", "_blank"),
-				() => open("https://www.youtube.com/watch?v=TsYZhJqfGHU", "_blank"),
-			];
-
-			let resultArray = [];
-
-			let count = 0;
+				() => openyt("wfd6eNx8Sxk"),
+				() => openyt("zss5tTEpWuQ"),
+				() => openyt("uB_jQ8H2Yeg"),
+				() => openyt("UFQEttrn6CQ"),
+				() => openyt("A4fcb5LV1F8"),
+				() => openyt("mHP6-D-yBEw"),
+				() => openyt("sWOvhZBS9IA"),
+				() => openyt("sGNOLLOfFwM"),
+				() => openyt("TsYZhJqfGHU"),
+			], resultArray = [], count = 0;
 
 			function command(event) {
 				resultArray.push(event.key);
@@ -122,43 +143,19 @@
 
 		<script>
 
-			var opened = [];
-
-			function neofetch() {
-				console.log(
-					[
-						"\x1b[1;32mihasq@ihasq.com\x1b[0m: $ neofetch --ascii_distro ihasq",
-						"                 .^7!~       \x1b[0m   \x1b[1;31mihasq\x1b[0m@\x1b[1;31mihasq.com",
-						"       .  :7..:?JJJJY~:.     \x1b[0m   ---------------",
-						"      !YJ^.?YYPBP5B5YPPY7.   \x1b[0m   \x1b[1;31mOS\x1b[0m: Debian GNU/Linux 11 (bullseye) x86_64",
-						"  .:^.!5BPJ5GJJPPP5GGBPY5^.  \x1b[0m   \x1b[1;31mHost\x1b[0m: XPS 13 9310",
-						"  ~Y77~?YGG57.:77^..:!!JP!P: \x1b[0m   \x1b[1;31mCPU\x1b[0m: 11th Gen Intel i7-1185G7 (8) @ 4.800GHz",
-						"  !Y5!JJN57~!7!IPSJ .^:.J5P^ \x1b[0m   \x1b[1;31mGPU\x1b[0m: Intel TigerLake GT2 [Iris Xe Graphics]",
-						" ~5PGP?!7.    ..!~  JUN!?PJ~ \x1b[0m   \x1b[1;31mMemory\x1b[0m: 15717MiB",
-						" ?P55B?~~.       :. .^^:YY   \x1b[0m   \x1b[1;31mGitHub\x1b[0m: https://github.com/ihasq",
-						" :77??J^:...    .BTC~   7~   \x1b[0m   \x1b[1;31mTwitter\x1b[0m: https://twitter.com/ihasq",
-						"   7Y57:::. .  .!~JY: ..     \x1b[0m   \x1b[1;31mNostr\x1b[0m: https://nostr.directory/p/ihasq",
-						"   7Y5!:^!~^^.  .^:^:...     \x1b[0m   \x1b[1;31mGist\x1b[0m: https://gist.github.com/ihasq",
-						"   ?PP~!^^^^^~~~^^:. .^^.    \x1b[0m   \x1b[1;31mEmail\x1b[0m: mailto://ihasq@ihasq.com",
-						"   .7P!JY!7?77!~~^~!.   ..   \x1b[0m   \x1b[1;31m$BTC\x1b[0m: 13EYfheB5CeEqBckzwsc2yFDT2Au5Aiokk",
-						"     !!7Y77?J55J77~:         \x1b[0m   \x1b[1;31m$ETH\x1b[0m: 0xc24D3470A4405017Ab02d03EE3471F30192E86FD",
-						"      ^^.....~77JYJ?^        \x1b[0m   \x1b[1;31m$XRP\x1b[0m: rBT61DzvHLbrrBSN2rpxXxAfTKuTxuC6sU",
-					].join("\x1b[0m\n\x1b[34m").replaceAll((window.navigator.userAgent.toLowerCase().indexOf("chrome") != -1)? "" : RegExp("\\x1b\\[(0|1;31|1;32|34)m", "g"), "")
-				);
-			};
-
-			neofetch();
+			window.opened = [];
 
 			function show(arg) {
 				document.body.innerHTML = document.querySelector(`template#${arg}`).innerHTML;
-				document.querySelectorAll(`script[type="text/babel"]#${arg}`).forEach(fn => {
-					if(!opened.includes(arg)) {
-						Function(fn.textContent)();
-						if(!fn.hasAttribute("always")) {
-							opened.push(arg);
+				const scriptList = document.querySelectorAll(`script[type="text/babel"]#${arg}`);
+				for(i = 0; i < scriptList.length; i++) {
+					if(!opened.includes(arg + "$" + i)) {
+						Function(scriptList[i].textContent)();
+						if(!scriptList[i].hasAttribute("always")) {
+							opened.push(arg + "$" + i);
 						};
 					};
-				});
+				};
 			};
 			
 		</script>
