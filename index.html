@@ -143,6 +143,7 @@
 		</template>
 
 		<!-- .vscode -->
+
 		<template id="vscode">
 			<pre id="vscode_placeholder"></pre>
 			<a id="download" download="settings.json">download</a>
@@ -187,7 +188,15 @@
 				font-size: 16px;
 			}
 			:link, :visited {
-				color: #00f
+				color: #00f;
+			}
+			a:hover, ::selection {
+				background-color: #000;
+				color: #0ff;
+			}
+			a:active {
+				background-color: #0ff;
+				color: #000;
 			}
 			br::selection {
 				background-color: transparent;
