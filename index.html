@@ -88,13 +88,33 @@
 
 		<template id="about">
 			<p>ihasq (2002 ~ present)</p>
-			<pre>region:   japan</pre>
-			<pre>skill:    programming</pre>
-			<pre>project:  evolt, evolt.js</pre>
-			<pre>language: js, rust, c, scratch</pre>
-			<pre>major:    commerce</pre>
-			<a href="javascript:show('body')">back</a>
+			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
+		<script type="text/babel" id="about" always>
+			const profile = {
+				region: "japan",
+				skill: "programming",
+				project: "evolt",
+				language: "js, rust, python, c, scratch",
+				hardware: "dell xps 13 9310",
+				cpu: "intel i7-1185g7",
+				gpu: "intel tigerlake gt2",
+				ram: "16gb",
+				storage: "512gb",
+				os: "debian gnu/linux 11",
+				desktop: "gnome 3.38",
+				editor: "codium",
+				framework: "vite",
+				major: "commerce"
+			};
+			let longestProperty = 0;
+			for(const property in profile) {
+				longestProperty = (property.length > longestProperty)? property.length : longestProperty;
+			};
+			for(const property in profile) {
+				document.querySelector("a.Back").insertAdjacentHTML("beforebegin", "<pre>" + property + ":" + (" ").repeat(longestProperty - property.length + 1) + profile[property] + "</pre>");
+			};
+		</script>
 
 		<!-- nostr -->
 
@@ -110,7 +130,8 @@
 		
 		<template id="wtfpl">
 			<pre id="wtfpl_placeholder"></pre>
-			<a href="javascript:show('body')">back</a>
+			<a href="http://www.wtfpl.net/txt/copying/" target="_blank">original</a>
+			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
 		<script id="wtfpl" type="text/babel" always>
 			document.querySelector("pre#wtfpl_placeholder").textContent = [
@@ -134,20 +155,27 @@
 
 		<template id="playlist">
 			<p>ihasq's music playlist</p>
-			<pre>Helsinki Lambda Club - Good News Is Bad News <a href="https://www.youtube.com/watch?v=TsYZhJqfGHU" target="_blank">youtube</a></pre>
-			<pre>AC Club - Hato Ni Komattara Amemiya <a href="https://www.youtube.com/watch?v=Ymnfiq0BtAY" target="_blank">youtube</a></pre>
-			<pre>taufuclub - Michikusa <a href="https://www.youtube.com/watch?v=KwlNVH51tng" target="_blank">youtube</a></pre>
-			<pre>Ichiko Aoba - Ikinokori Bokura <a href="https://www.youtube.com/watch?v=4kzYOqNRrco" target="_blank">youtube</a></pre>
-			<pre>Back Number - Kaitou <a href="https://www.youtube.com/watch?v=1DPldNasDgY" target="_blank">youtube</a></pre>
-			<a href="javascript:show('body')">back</a>
+			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
+		<script type="text/babel" id="playlist" always>
+			const playlist = {
+				"Helsinki Lambda Club - Good News Is Bad News": "TsYZhJqfGHU",
+				"AC Club - Hato Ni Komattara Amemiya": "Ymnfiq0BtAY",
+				"taufuclub - Michikusa": "KwlNVH51tng",
+				"Ichiko Aoba - Ikinokori Bokura": "4kzYOqNRrco",
+				"Back Number - Kaitou": "1DPldNasDgY"
+			};
+			for(const property in playlist) {
+				document.querySelector("a.Back").insertAdjacentHTML("beforebegin", "<pre>" + property + ": <a href='https://www.youtube.com/watch?v=" + playlist[property] + "' target='_blank'>youtube</a></pre>")
+			};
+		</script>
 
 		<!-- .vscode -->
 
 		<template id="vscode">
 			<pre id="vscode_placeholder"></pre>
 			<a id="download" download="settings.json">download</a>
-			<a href="javascript:show('body')">back</a>
+			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
 		<script type="text/babel" id="vscode" always>
 			const settings = JSON.stringify({
