@@ -87,33 +87,38 @@
 		<!-- about -->
 
 		<template id="about">
-			<p>ihasq (2002 ~ present)</p>
+			ihasq (2002 ~ present)
+			<pre id="about_placeholder"></pre>
 			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
 		<script type="text/babel" id="about" always>
-			const profile = {
-				region: "japan",
-				skill: "programming",
-				project: "evolt",
-				language: "js, rust, python, c, scratch",
-				hardware: "dell xps 13 9310",
-				cpu: "intel i7-1185g7",
-				gpu: "intel tigerlake gt2",
-				ram: "16gb",
-				storage: "512gb",
-				os: "debian gnu/linux 11",
-				desktop: "gnome 3.38",
-				editor: "codium",
-				framework: "vite",
-				major: "commerce"
-			};
-			let longestProperty = 0;
-			for(const property in profile) {
-				longestProperty = (property.length > longestProperty)? property.length : longestProperty;
-			};
-			for(const property in profile) {
-				document.querySelector("a.Back").insertAdjacentHTML("beforebegin", "<pre>" + property + ":" + (" ").repeat(longestProperty - property.length + 1) + profile[property] + "</pre>");
-			};
+			{
+				const profile = {
+					region: "japan",
+					skill: "programming",
+					project: "evolt",
+					language: "js, rust, python, c, scratch",
+					hardware: "dell xps 13 9310",
+					cpu: "intel i7-1185g7",
+					gpu: "intel tigerlake gt2",
+					ram: "16gb",
+					storage: "512gb",
+					os: "debian gnu/linux 11",
+					desktop: "gnome 3.38",
+					editor: "codium",
+					framework: "vite",
+					major: "commerce"
+				};
+				let longestProperty = 0;
+				for(const property in profile) {
+					longestProperty = (property.length > longestProperty)? property.length : longestProperty;
+				};
+				let insertion = "";
+				for(const property in profile) {
+					insertion += ("\n" + property + ":" + (" ").repeat(longestProperty - property.length + 1) + profile[property] + "\n")
+				};
+				document.querySelector("pre#about_placeholder").innerHTML = insertion;
+			}
 		</script>
 
 		<!-- nostr -->
@@ -134,40 +139,47 @@
 			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
 		<script id="wtfpl" type="text/babel" always>
-			document.querySelector("pre#wtfpl_placeholder").textContent = [
-				"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
-				"                   Version 2, December 2004",
-				"",
-				"Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>",
-				"",
-				"Everyone is permitted to copy and distribute verbatim or modified",
-				"copies of this license document, and changing it is allowed as long",
-				"as the name is changed.",
-				"",
-				"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
-				"  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION",
-				"",
-				" 0. You just DO WHAT THE FUCK YOU WANT TO.",
-			].join("\n");
+			{
+				document.querySelector("pre#wtfpl_placeholder").textContent = [
+					"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
+					"                   Version 2, December 2004",
+					"",
+					"Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>",
+					"",
+					"Everyone is permitted to copy and distribute verbatim or modified",
+					"copies of this license document, and changing it is allowed as long",
+					"as the name is changed.",
+					"",
+					"           DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE",
+					"  TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION",
+					"",
+					" 0. You just DO WHAT THE FUCK YOU WANT TO.",
+				].join("\n");
+			}
 		</script>
 
 		<!-- playlist -->
 
 		<template id="playlist">
-			<p>ihasq's music playlist</p>
+			ihasq's music playlist
+			<pre id="playlist_placeholder"></pre>
 			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
 		<script type="text/babel" id="playlist" always>
-			const playlist = {
-				"Helsinki Lambda Club - Good News Is Bad News": "TsYZhJqfGHU",
-				"AC Club - Hato Ni Komattara Amemiya": "Ymnfiq0BtAY",
-				"taufuclub - Michikusa": "KwlNVH51tng",
-				"Ichiko Aoba - Ikinokori Bokura": "4kzYOqNRrco",
-				"Back Number - Kaitou": "1DPldNasDgY"
-			};
-			for(const property in playlist) {
-				document.querySelector("a.Back").insertAdjacentHTML("beforebegin", "<pre>" + property + ": <a href='https://www.youtube.com/watch?v=" + playlist[property] + "' target='_blank'>youtube</a></pre>")
-			};
+			{
+				const playlist = {
+					"Helsinki Lambda Club - Good News Is Bad News": "TsYZhJqfGHU",
+					"AC Club - Hato Ni Komattara Amemiya": "Ymnfiq0BtAY",
+					"taufuclub - Michikusa": "KwlNVH51tng",
+					"Ichiko Aoba - Ikinokori Bokura": "4kzYOqNRrco",
+					"Back Number - Kaitou": "1DPldNasDgY"
+				};
+				let insertion = "";
+				for(const property in playlist) {
+					insertion += ("\n" + property + ": <a href='https://www.youtube.com/watch?v=" + playlist[property] + "' target='_blank'>youtube</a>\n");
+				};
+				document.querySelector("pre#playlist_placeholder").innerHTML = insertion;
+			}
 		</script>
 
 		<!-- .vscode -->
@@ -178,18 +190,20 @@
 			<a class="Back" href="javascript:show('body')">back</a>
 		</template>
 		<script type="text/babel" id="vscode" always>
-			const settings = JSON.stringify({
-				"editor.fontFamily": "JetBrains Mono",
-				"editor.tabSize": 4,
-				"editor.indentSize": "tabSize",
-				"editor.fontSize": 14.3,
-				"editor.lineHeight": 1.3,
-				"editor.letterSpacing": 0.5,
-				"editor.insertSpaces": false,
-				"editor.acceptSuggestionOnCommitCharacter": false,
-			}, null, "\t");
-			document.querySelector("pre#vscode_placeholder").textContent = settings;
-			document.querySelector("a#download").setAttribute("href", "data:application/json," + settings);
+			{
+				const settings = JSON.stringify({
+					"editor.fontFamily": "JetBrains Mono",
+					"editor.tabSize": 4,
+					"editor.indentSize": "tabSize",
+					"editor.fontSize": 14.3,
+					"editor.lineHeight": 1.3,
+					"editor.letterSpacing": 0.5,
+					"editor.insertSpaces": false,
+					"editor.acceptSuggestionOnCommitCharacter": false,
+				}, null, "\t");
+				document.querySelector("pre#vscode_placeholder").textContent = settings;
+				document.querySelector("a#download").setAttribute("href", "data:application/json," + settings);
+			}
 		</script>
 
 		<script>
