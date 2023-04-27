@@ -17,6 +17,7 @@
 			<a href="javascript:show('nostr')">nostr</a>
 			<a href="javascript:show('playlist')">playlist</a>
 			<a href="mailto:ihasq@ihasq.com">email</a>
+			<a href="javascript:show('vscode')">.vscode</a>
 			<a href="javascript:show('wtfpl')">license</a>
 		</template>
 		<script id="body" type="text/babel">
@@ -140,6 +141,27 @@
 			<pre>Back Number - Kaitou <a href="https://www.youtube.com/watch?v=1DPldNasDgY" target="_blank">youtube</a></pre>
 			<a href="javascript:show('body')">back</a>
 		</template>
+
+		<!-- .vscode -->
+		<template id="vscode">
+			<pre id="vscode_placeholder"></pre>
+			<a id="download" download="settings.json">download</a>
+			<a href="javascript:show('body')">back</a>
+		</template>
+		<script type="text/babel" id="vscode" always>
+			const settings = JSON.stringify({
+				"editor.fontFamily": "JetBrains Mono",
+				"editor.tabSize": 4,
+				"editor.indentSize": "tabSize",
+				"editor.fontSize": 14.3,
+				"editor.lineHeight": 1.3,
+				"editor.letterSpacing": 0.5,
+				"editor.insertSpaces": false,
+				"editor.acceptSuggestionOnCommitCharacter": false,
+			}, null, "\t");
+			document.querySelector("pre#vscode_placeholder").textContent = settings;
+			document.querySelector("a#download").setAttribute("href", "data:application/json," + settings);
+		</script>
 
 		<script>
 
