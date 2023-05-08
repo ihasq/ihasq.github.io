@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<head>
+	<title>konami command live example</title>
+	<meta charset="utf-8"/>
+</head>
+<body>
+	<h1>↑↑↓↓←→←→ba</h1>
+	<script>
+		const key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh";
+
+		let secrets = [
+			() => openyt("wfd6eNx8Sxk"),
+			() => openyt("zss5tTEpWuQ"),
+			() => openyt("uB_jQ8H2Yeg"),
+			() => openyt("UFQEttrn6CQ"),
+			() => openyt("A4fcb5LV1F8"),
+			() => openyt("mHP6-D-yBEw"),
+			() => openyt("sWOvhZBS9IA"),
+			() => openyt("sGNOLLOfFwM"),
+			() => openyt("TsYZhJqfGHU"),
+		], resultArray = [], count = 0;
+
+		function command(event) {
+			resultArray.push(event.key);
+			if(resultArray.length === 10) {
+				if(atob(key) === resultArray.toString()) {
+					doRandomThings();
+				};
+				resultArray.shift();
+			};
+		};
+		function doRandomThings() {
+			const selectionIndex = Math.floor(Math.random() * (secrets.length - count))
+			secrets[selectionIndex]();
+			secrets.splice(secrets.length, 0, secrets[selectionIndex]);
+			secrets.splice(selectionIndex, 1);
+			count++;
+			count %= secrets.length;
+		};
+
+		window.addEventListener("keyup", event => command(event));
+	</script>
+</body>
