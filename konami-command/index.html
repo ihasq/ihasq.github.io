@@ -8,11 +8,13 @@
 	<script>
 		const key = "QXJyb3dVcCxBcnJvd1VwLEFycm93RG93bixBcnJvd0Rvd24sQXJyb3dMZWZ0LEFycm93UmlnaHQsQXJyb3dMZWZ0LEFycm93UmlnaHQsYixh";
 
+		let resultArray = [];
+
 		function command(event) {
 			resultArray.push(event.key);
 			if(resultArray.length === 10) {
 				if(atob(key) === resultArray.toString()) {
-					alert("foo");
+					doRandomThings();
 				};
 				resultArray.shift();
 			};
