@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>count</title>
+		<meta charset="utf-8"/>
+	</head>
+	<body>
+		<textarea id="target" rows="16" cols="32"></textarea>
+		<h1 id="count">0</h1>
+		<script type="text/javascript">
+			"use strict";
+	
+			document.getElementById("target").addEventListener("keydown", event => setTimeout(() => {
+				document.getElementById("count").textContent = event.target.value.length;
+			}, 0), { passive: true });
+	
+			document.getElementById("target").focus();
+		</script>
+	</body>
+</html>
