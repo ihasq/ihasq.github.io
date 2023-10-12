@@ -11,14 +11,18 @@
 		<script type="text/javascript">
 			"use strict";
 
+			function $(id) {
+				return document.getElementById(id);
+			};
+
 			let IS_N_INCLUDED = true;
 
 			function count() {
-				let VALUE = document.getElementById("target").value;
+				let VALUE = $("target").value;
 				if(!IS_N_INCLUDED) {
 					VALUE = VALUE.replace(/\n/g, "");
 				};
-				document.getElementById("count").textContent = VALUE.length;
+				$("count").textContent = VALUE.length;
 			};
 
 			const EVENT_REGISTRY = {
@@ -35,11 +39,11 @@
 
 			for(const id in EVENT_REGISTRY) {
 				for(const eventName in EVENT_REGISTRY[id]) {
-					document.getElementById(id).addEventListener(eventName, EVENT_REGISTRY[id][eventName], { passive: true });
+					$(id).addEventListener(eventName, EVENT_REGISTRY[id][eventName], { passive: true });
 				};
 			};
 	
-			document.getElementById("target").focus();
+			$("target").focus();
 		</script>
 	</body>
 </html>
