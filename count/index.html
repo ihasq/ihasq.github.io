@@ -7,12 +7,37 @@
 	<body>
 		<textarea id="target" rows="16" cols="32"></textarea>
 		<h1 id="count">0</h1>
+		<label>改行を含める<input id="includes_n" type="checkbox" checked/></label>
 		<script type="text/javascript">
 			"use strict";
-	
-			document.getElementById("target").addEventListener("keydown", event => setTimeout(() => {
-				document.getElementById("count").textContent = event.target.value.length;
-			}, 0), { passive: true });
+
+			let IS_N_INCLUDED = true;
+
+			function count() {
+				let VALUE = document.getElementById("target").value;
+				if(!IS_N_INCLUDED) {
+					VALUE = VALUE.replace(/\n/g, "");
+				};
+				document.getElementById("count").textContent = VALUE.length;
+			};
+
+			const EVENT_REGISTRY = {
+				"target": {
+					"keydown": () => setTimeout(count, 0),
+				},
+				"includes_n": {
+					"change": event => setTimeout(() => {
+						IS_N_INCLUDED = event.target.checked;
+						count();
+					}, 0),
+				},
+			};
+
+			for(const id in EVENT_REGISTRY) {
+				for(const eventName in EVENT_REGISTRY[id]) {
+					document.getElementById(id).addEventListener(eventName, EVENT_REGISTRY[id][eventName], { passive: true });
+				};
+			};
 	
 			document.getElementById("target").focus();
 		</script>
