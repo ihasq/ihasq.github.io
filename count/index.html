@@ -5,9 +5,14 @@
 		<meta charset="utf-8"/>
 	</head>
 	<body>
+
 		<textarea id="target" rows="16" cols="32"></textarea>
-		<h1 id="count">0</h1>
+		<h1><span id="count">0</span></h1>
 		<label>改行を含める<input id="includes_n" type="checkbox" checked/></label>
+		<br/>
+		<label>ノルマモード<input id="norma_mode" type="checkbox"/></label>
+		<input id="norma_length" type="number" min="0" hidden="true"/>
+
 		<script type="text/javascript">
 			"use strict";
 
@@ -16,13 +21,18 @@
 			};
 
 			let IS_N_INCLUDED = true;
+			let IS_NORMA_MODE = false;
 
 			function count() {
 				let VALUE = $("target").value;
 				if(!IS_N_INCLUDED) {
 					VALUE = VALUE.replace(/\n/g, "");
 				};
-				$("count").textContent = VALUE.length;
+				let RESULT = IS_NORMA_MODE? (Number($("norma_length").value) - VALUE.length) : VALUE.length;
+				if(RESULT < 0) {
+					RESULT = 0;
+				};
+				$("count").textContent = (IS_NORMA_MODE? "残り " : "") + RESULT;
 			};
 
 			const EVENT_REGISTRY = {
@@ -32,8 +42,25 @@
 				"includes_n": {
 					"change": event => setTimeout(() => {
 						IS_N_INCLUDED = event.target.checked;
+						$("count").textContent = count();
+					}, 0),
+				},
+				"norma_mode": {
+					"change": event => setTimeout(() => {
+						$("norma_length").hidden = !(event.target.checked);
+						IS_NORMA_MODE = event.target.checked;
+						if(event.target.checked) {
+							$("norma_length").focus();
+							$("norma_length").value = "100";
+						} else {
+							$("target").focus();
+						};
 						count();
 					}, 0),
+				},
+				"norma_length": {
+					"keydown": event => setTimeout(count, 0),
+					"change": event => setTimeout(count, 0),
 				},
 			};
 
@@ -45,5 +72,6 @@
 	
 			$("target").focus();
 		</script>
+
 	</body>
 </html>
