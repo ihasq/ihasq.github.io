@@ -1,0 +1,440 @@
+<!--
+
+	履歴書工房 v0.0.1
+	created and maintained by ihasq
+
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>履歴書工房</title>
+		<meta charset="utf-8"/>
+		<style>
+			@media print {
+				div#link, label#about_myself_fontsize_placeholder {
+					display: none;
+				}
+				input:hover:not(.static) {
+					background-color: transparent;
+				}
+				::placeholder {
+					color: transparent;
+				}
+			}
+			* {
+				--height: 100%
+			}
+			html, body {
+				margin: 0px;
+				padding: 0px;
+				height: 100%;
+				width: 100%;
+			}
+			svg#placeholder > foreignObject {
+				position: relative;
+				padding: 0px;
+				margin: 0px;
+				width: 100%;
+				height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<svg id="placeholder" viewBox="0, 0, 2480, 1754">
+			<image width="100%" href="./temp.webp"></image>
+			<foreignObject id="input">
+
+				<style>
+					* {
+						position: absolute;
+						--selected-bg: rgba(0, 0, 0, 0.1);
+					}
+					* > div > a {
+						position: relative;
+					}
+					input:not([type="range"]), textarea {
+						appearance: textfield;
+						border: none;
+						font-family: serif;
+						background-color: transparent;
+						border-radius: 4px;
+					}
+					textarea {
+						resize: none;
+					}
+					input:not([type="range"]):focus, textarea:focus {
+						outline: none;
+					}
+					input:not([type="range"]):hover:not(.static), textarea:hover:not(.static) {
+						background-color: rgba(0, 0, 0, 0.075)
+					}
+					input:not([type="range"])::-webkit-outer-spin-button, input:not([type="range"])::-webkit-inner-spin-button {
+						-webkit-appearance: none;
+						margin: 0;
+					}
+					input#age:hover {
+						cursor: help;
+					}
+
+					input.history {
+						height: 44px;
+						font-size: 24px;
+					}
+					input.history.year {
+						width: 105px;
+						text-align: center;
+					}
+					input.history.year.left {
+						left: 144px;
+					}
+					input.history.year.right {
+						left: 1356px;
+					}
+					input.history.month {
+						width: 45px;
+						text-align: center;
+					}
+					input.history.month.left {
+						left: 258px;
+					}
+					input.history.month.right {
+						left: 1470px;
+					}
+					input.history.content {
+						width: 808px;
+						padding-left: 16px;
+						padding-right: 16px;
+					}
+					input.history.content.left {
+						left: 314px;
+					}
+					input.history.content.right {
+						left: 1526px;
+					}
+					input.wishes {
+						height: 44px;
+						font-size: 24px;
+						left: 1356px;
+						width: 1005px;
+					}
+				</style>
+
+				<div id="link" style="
+					top: 115px;
+					right: 110px;
+					width: auto;
+					font-size: 20px;
+					text-align: right;
+					white-space: pre;
+				"><a id="print_pdf" href="https://doda.jp/guide/rireki/" target="_blank">履歴書の書きかた</a>&nbsp;&nbsp;<a id="print_pdf" href="javascript:print()">プリントする（Ctrl + P）</a>&nbsp;&nbsp;<a href="./man.html">ソースコード</a></div>
+
+				<input id="date_year" style="
+					top: 168px;
+					left: 595px;
+					height: 57px;
+					width: 68px;
+					font-size: 24px;
+					text-align: right;
+				" type="number"/>
+
+				<input id="date_month" style="
+					top: 168px;
+					left: 690px;
+					height: 57px;
+					width: 40px;
+					font-size: 24px;
+					text-align: right;
+				" type="number"/>
+
+				<input id="date_day" style="
+					top: 168px;
+					left: 755px;
+					height: 57px;
+					width: 40px;
+					font-size: 24px;
+					text-align: right;
+				" type="number"/>
+
+				<input id="shimei_kana" style="
+					top: 234px;
+					left: 260px;
+					height: 24px;
+					width: 554px;
+					font-size: 20px;
+				" type="text" placeholder="りれきしょ　　　　　　　こうぼう"/>
+
+				<input id="shimei_kanji" style="
+					top: 267px;
+					left: 260px;
+					height: 151px;
+					width: 554px;
+					font-size: 60px;
+				" type="text" placeholder="履歴書　工房"/>
+
+				<input id="birth_year" style="
+					top: 429px;
+					left: 284px;
+					height: 43px;
+					width: 68px;
+					font-size: 24px;
+					text-align: right;
+				" type="number" value="2002"/>
+
+				<input id="birth_month" style="
+					top: 429px;
+					left: 383px;
+					height: 43px;
+					width: 60px;
+					font-size: 24px;
+					text-align: right;
+				" type="number" value="04"/>
+
+				<input id="birth_day" style="
+					top: 429px;
+					left: 480px;
+					height: 43px;
+					width: 60px;
+					font-size: 24px;
+					text-align: right;
+				" type="number" value="01"/>
+
+				<input id="age" class="static" style="
+					top: 429px;
+					left: 681px;
+					height: 43px;
+					width: 40px;
+					font-size: 24px;
+					text-align: center;
+				" type="number" value="00" readonly/>
+
+				<input id="gender" style="
+					top: 429px;
+					left: 900px;
+					height: 43px;
+					width: 176px;
+					font-size: 24px;
+					text-align: center;
+				" type="text"/>
+
+				<input id="address_1_kana" style="
+					top: 481px;
+					left: 277px;
+					height: 24px;
+					width: 664px;
+					font-size: 20px;
+				" type="text"/>
+
+				<input id="address_1_postcode" style="
+					top: 513px;
+					left: 277px;
+					height: 23px;
+					width: 130px;
+					font-size: 22px;
+				" type="text"/>
+
+				<textarea id="address_1_kanji" style="
+					top: 537px;
+					left: 277px;
+					height: 68px;
+					width: 664px;
+					font-size: 34px;
+				" wrap="hard"></textarea>
+
+				<input id="phonenumber_1" style="
+					top: 513px;
+					left: 953px;
+					height: 64px;
+					width: 195px;
+					font-size: 24px;
+					text-align: center;
+				" type="text"/>
+
+				<input id="address_2_kana" style="
+					top: 615px;
+					left: 277px;
+					height: 24px;
+					width: 664px;
+					font-size: 20px;
+				" type="text"/>
+
+				<input id="address_2_postcode" style="
+					top: 647px;
+					left: 277px;
+					height: 23px;
+					width: 130px;
+					font-size: 22px;
+				" type="text"/>
+
+				<textarea id="address_2_kanji" style="
+					top: 671px;
+					left: 277px;
+					height: 68px;
+					width: 664px;
+					font-size: 34px;
+				" wrap="hard"></textarea>
+
+				<input id="phonenumber_2" style="
+					top: 647px;
+					left: 953px;
+					height: 64px;
+					width: 195px;
+					font-size: 24px;
+					text-align: center;
+				" type="text"/>
+
+				<label id="about_myself_fontsize_placeholder" style="
+					top: 986px;
+					left: 2030px;
+				">文字サイズ: <span id="about_myself_fontsize_px">24</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="about_myself_fontsize" type="range" min="20" max="40" value="24" style="width: 200px"/></label>
+
+				<textarea id="about_myself" style="
+					top: 1020px;
+					left: 1356px;
+					height: 307px;
+					width: 1005px;
+					font-size: 20.85px;
+				" wrap="hard"></textarea>
+
+			</foreignObject>
+		</svg>
+		<script type="text/javascript">
+			"use strict";
+
+			{
+
+				document.querySelector("svg#placeholder > foreignObject").insertAdjacentHTML("beforeend", (() => {
+
+					let templateString = "";
+
+					let styleTop = 817;
+
+					for(let i = 0; i < 28; i++) {
+						templateString += `
+							<input class="history year ${(i < 15)? "left" : "right"}" id="history_${i}_year" next="history_${i}_month" style="top: ${styleTop}px" type="text"/>
+							<input class="history month ${(i < 15)? "left" : "right"}" id="history_${i}_month" next="history_${i}" style="top: ${styleTop}px" type="text"/>
+							<input class="history content ${(i < 15)? "left" : "right"}" id="history_${i}" next="history_${i + 1}_year" style="top: ${styleTop}px" type="text" ${
+								(styleTop === 817)? "placeholder=\"「学歴」「職歴」「賞罰」のいずれかを入力して開始、「以上」で終了\"" : ""
+							}/>
+						`;
+						styleTop = (i === 14)? 213 : (i === 21)? 634 : Math.round((styleTop + 53.65) * 1000) / 1000;
+					};
+
+					styleTop = 1407.15;
+
+					for(let i = 0; i < 4; i++) {
+						templateString += `
+							<input class="wishes" style="top: ${styleTop}px;"/>
+						`;
+						styleTop = Math.round((styleTop + 53.65) * 1000) / 1000;
+					};
+
+					return templateString.replace(/\t|\n/g, "");
+
+				})());
+
+				function checkQuery(target) {
+					if(["学歴", "職歴", "賞罰", "学\u3000歴", "職\u3000歴", "賞\u3000罰", "以上"].includes(target.value)) {
+						// target.blur();
+						$(target.id + "_year").value = "";
+						$(target.id + "_month").value = "";
+						target.style.textAlign = "center";
+						if(["以上"].includes(target.value)) {
+							target.style.textAlign = "right";
+						} else {
+							if(["学歴", "職歴", "賞罰"].includes(target.value)) {
+								target.value = target.value.split("").join("\u3000");
+							};
+						};
+					} else {
+						target.style.textAlign = "left";
+					};
+				};
+
+				document.querySelectorAll("input.history.content").forEach(el => {
+					el.addEventListener("change", event => {
+						setTimeout(() => {
+							checkQuery(event.target)
+						}, 0);
+					}, { passive: true });
+				});
+
+				function $(id) {
+					return document.getElementById(id);
+				};
+
+				const date = new Date();
+
+				/**
+				 * このオブジェクトは作業データをローカルに保存するためのものであり、特定のサーバーに送信されることはありません
+				*/
+
+				const CACHE = {
+					"date_year": date.getFullYear(),
+					"date_month": date.getMonth() + 1,
+					"date_day": date.getDate(),
+				};
+
+				for(const index in CACHE) {
+					$(index).value = CACHE[index];
+				};
+
+				$("shimei_kanji").focus();
+
+				function refreshAge() {
+					const dateBuffer = {
+						birth: {
+							year: Number($("birth_year").value),
+							month: Number($("birth_month").value),
+							day: Number($("birth_day").value),
+						},
+						date: {
+							year: Number($("date_year").value),
+							month: Number($("date_month").value),
+							day: Number($("date_day").value),
+						}
+					}
+					$("age").value = dateBuffer.date.year - dateBuffer.birth.year - (new Date(dateBuffer.date.year, dateBuffer.date.month - 1, dateBuffer.date.day) < new Date(dateBuffer.date.year, dateBuffer.birth.month - 1, dateBuffer.birth.day));
+				};
+
+				["birth", "date"].forEach(query => {
+					["year", "month", "day"].forEach(id => {
+						$(query + "_" + id).addEventListener("keydown", () => setTimeout(refreshAge, 0), { passive: true })
+					});
+				});
+
+				for(let index = 1; index < 3; index++) {
+					$("address_" + index + "_kanji").addEventListener("keydown", event => {
+						if(event.code === "Enter" && /\n/.test(event.target.value)) {
+							event.preventDefault();
+						};
+					}, { passive: false });
+				};
+				
+				const DESC = {
+					"shimei_kana": `
+						読み仮名は氏名のそれぞれの真上に配置します。
+					`,
+					"age": `
+						年齢は上記の日付と生年月日から自動で算出されます。
+					`,
+					"gender": `
+						性別欄の記載は任意です。未記載とすることも可能です。
+					`
+				};
+
+				for(const index in DESC) {
+					$(index).title = DESC[index].replace(/\t/g, "");
+				};
+
+				$("about_myself_fontsize").addEventListener("input", event => {
+					$("about_myself").style.fontSize = event.target.value + "px";
+					$("about_myself_fontsize_px").textContent = event.target.value;
+				}, { passive: true });
+				
+				refreshAge();
+
+			};
+
+		</script>
+	</body>
+</html>
