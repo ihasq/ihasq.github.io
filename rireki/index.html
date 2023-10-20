@@ -38,6 +38,7 @@
 				height: 100%;
 			}
 		</style>
+		<link rel="preload" href="./temp.webp" as="image"/>
 	</head>
 	<body>
 		<svg id="placeholder" viewBox="0, 0, 2480, 1754">
@@ -363,10 +364,6 @@
 				};
 
 				const date = new Date();
-
-				/**
-				 * このオブジェクトは作業データをローカルに保存するためのものであり、特定のサーバーに送信されることはありません
-				*/
 
 				const CACHE = {
 					"date_year": date.getFullYear(),
