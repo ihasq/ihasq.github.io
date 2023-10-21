@@ -3,15 +3,31 @@
 	<head>
 		<title>count</title>
 		<meta charset="utf-8"/>
+		<style>
+			input[type="button"] {
+				padding: 1px 30px;
+			}
+			textarea#target {
+				font-size: 20px;
+				width: 720px;
+				height: 600px;
+			}
+		</style>
 	</head>
 	<body>
 
-		<textarea id="target" rows="16" cols="32"></textarea>
+		<textarea id="target"></textarea>
 		<h1><span id="count">0</span></h1>
 		<label>改行を含める<input id="includes_n" type="checkbox" checked/></label>
 		<br/>
 		<label>ノルマモード<input id="norma_mode" type="checkbox"/></label>
 		<input id="norma_length" type="number" min="0" hidden="true"/>
+		<br/>
+		<br/>
+		<label>文字サイズ：<span id="target_typesize_px">20</span>px <input id="target_typesize" type="range" min="20" max="50" value="20"/></label>
+		<br/>
+		<br/>
+		<label><input id="replace_from" type="text" size="10" placeholder="です"/> を <input id="replace_to" type="text" size="10" placeholder="である"/> に置き換える <input id="replace_exec" type="button" value="実行" disabled/> <input id="replace_cancel" type="button" value="元に戻す" disabled/> <input id="replace_swap" type="button" value="値を入替" disabled/></label>
 
 		<script type="text/javascript">
 			"use strict";
@@ -24,6 +40,7 @@
 			let IS_NORMA_MODE = false;
 
 			function count() {
+
 				let VALUE = $("target").value;
 				if(!IS_N_INCLUDED) {
 					VALUE = VALUE.replace(/\n/g, "");
@@ -33,11 +50,30 @@
 					RESULT = 0;
 				};
 				$("count").textContent = (IS_NORMA_MODE? "残り " : "") + RESULT;
+
 			};
+
+			function replaceQuery() {
+
+				$("replace_swap")[
+					(($("replace_from").value === $("replace_to").value)? "set" : "remove") + "Attribute"
+				]("disabled", null);
+
+				$("replace_exec")[(
+					($("replace_from").value && $("replace_to").value)? "remove" : "set") + "Attribute"
+				]("disabled", null);
+
+			};
+
+			let replace_cache = -1;
 
 			const EVENT_REGISTRY = {
 				"target": {
-					"keydown": () => setTimeout(count, 0),
+					"keydown": () => {
+						replace_cache = -1;
+						$("replace_cancel").disabled = "true";
+						setTimeout(count, 0);
+					},
 				},
 				"includes_n": {
 					"change": event => setTimeout(() => {
@@ -60,16 +96,63 @@
 					}, 0),
 				},
 				"norma_length": {
-					"keydown": event => setTimeout(count, 0),
-					"change": event => setTimeout(count, 0),
+					"keydown": () => setTimeout(count, 0),
+					"change": () => setTimeout(count, 0),
+				},
+				"replace_from": {
+					"keydown": () => setTimeout(replaceQuery, 0),
+				},
+				"replace_to": {
+					"keydown": () => setTimeout(replaceQuery, 0),
+				},
+				"replace_exec": {
+					"click": event => {
+						if($("replace_from").value && $("replace_to").value) {
+							const REPLACED_TEXT = $("target").value.replace(new RegExp($("replace_from").value, "g"), $("replace_to").value);
+							if($("target").value !== REPLACED_TEXT) {
+								replace_cache = $("target").value;
+								$("target").value = REPLACED_TEXT;
+								$("replace_cancel").removeAttribute("disabled");
+							};
+							setTimeout(count, 0);
+						};
+						$("target").focus();
+					},
+				},
+				"replace_cancel": {
+					"click": event => {
+						if(replace_cache !== -1) {
+							$("target").value = replace_cache;
+							replace_cache = -1;
+							$("replace_cancel").setAttribute("disabled", null);
+							setTimeout(count, 0);
+						};
+						$("target").focus();
+					},
+				},
+				"replace_swap": {
+					"click": event => {
+						const SWAP_BUFFER = $("replace_from").value;
+						$("replace_from").value = $("replace_to").value;
+						$("replace_to").value = SWAP_BUFFER;
+						$("target").focus();
+					},
+				},
+				"target_typesize": {
+					"input": event => {
+						$("target").style.fontSize = event.target.value + "px";
+						$("target_typesize_px").textContent = event.target.value;
+					}
 				},
 			};
 
-			for(const id in EVENT_REGISTRY) {
-				for(const eventName in EVENT_REGISTRY[id]) {
-					$(id).addEventListener(eventName, EVENT_REGISTRY[id][eventName], { passive: true });
-				};
-			};
+			["change", "keydown", "click", "input"].forEach(eventIndex => {
+				document.body.addEventListener(eventIndex, event => {
+					if(event.target.id in EVENT_REGISTRY && eventIndex in EVENT_REGISTRY[event.target.id]) {
+						EVENT_REGISTRY[event.target.id][eventIndex](event);
+					};
+				}, { passive: true });
+			});
 	
 			$("target").focus();
 		</script>
