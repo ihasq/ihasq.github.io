@@ -4,19 +4,30 @@
 		<title>count</title>
 		<meta charset="utf-8"/>
 		<style>
+			* {
+				box-sizing: border-box;
+			}
+			html, body {
+				height: 100%;
+			}
+			body {
+				margin: 0px;
+				padding: 8px;
+			}
 			input[type="button"] {
 				padding: 1px 30px;
 			}
 			textarea#target {
 				font-size: 20px;
-				width: 720px;
-				height: 600px;
+				width: 100%;
+				height: calc(100% - 300px);
+				resize: none;
 			}
 		</style>
 	</head>
 	<body>
 
-		<textarea id="target"></textarea>
+		<textarea id="target" re></textarea>
 		<h1><span id="count">0</span></h1>
 		<label>改行を含める<input id="includes_n" type="checkbox" checked/></label>
 		<br/>
@@ -53,6 +64,10 @@
 
 			};
 
+			function saveTargetValue() {
+				localStorage.setItem("target_value", $("target").value);
+			};
+
 			function replaceQuery() {
 
 				$("replace_swap")[
@@ -73,6 +88,9 @@
 						replace_cache = -1;
 						$("replace_cancel").disabled = "true";
 						setTimeout(count, 0);
+					},
+					"change": () => {
+						saveTargetValue()
 					},
 				},
 				"includes_n": {
@@ -113,6 +131,7 @@
 								replace_cache = $("target").value;
 								$("target").value = REPLACED_TEXT;
 								$("replace_cancel").removeAttribute("disabled");
+								saveTargetValue();
 							};
 							setTimeout(count, 0);
 						};
@@ -126,6 +145,7 @@
 							replace_cache = -1;
 							$("replace_cancel").setAttribute("disabled", null);
 							setTimeout(count, 0);
+							saveTargetValue();
 						};
 						$("target").focus();
 					},
@@ -155,6 +175,8 @@
 			});
 	
 			$("target").focus();
+
+			$("target").value = localStorage.getItem("target_value");
 		</script>
 
 	</body>
