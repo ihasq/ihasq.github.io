@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Zentype</title>
+		<meta charset="utf-8" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+		<style>
+			html, body, div.wrapper {
+				box-sizing: border-box;
+				margin: 0px;
+				padding: 0px;
+				height: 100%;
+			}
+			html, body {
+				background-color: #eee;
+				width: 100%;
+			}
+			div.wrapper.center {
+				display:flex;
+				flex-flow: column;
+				height: 100%;
+				width: 60%;
+				margin-left: 20%;
+				margin-right: 20%;
+				text-align: center;
+			}
+			span.main {
+				font-size: 120px;
+				line-height: 95vh;
+				font-family: 'JetBrains Mono', monospace;
+			}
+			span.main > span.character {
+				color: rgba(0, 0, 40, 0.2)
+			}
+			span.main > span.character.active {
+				background-color: #000;
+				color: #eee;
+			}
+			span.main > span.character.active.wrong {
+				color: #f00;
+			}
+			span.main > span.character.done {
+				color: #000;
+			}
+			span.main > span.character.done.right {
+				color: #0f0;
+			}
+			span.wpm {
+				font-size: 40px;
+				font-family: 'JetBrains Mono', monospace;;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="wrapper center">
+			<span class="main">
+				<span class="character active">s</span><span class="character">t</span><span class="character">a</span><span class="character">r</span><span class="character">t</span>
+			</span>
+		</div>
+		<script>
+			"use strict";
+
+			{
+
+				class RandomArray {
+					#private = Object.create(null);
+					constructor() {
+						Object.assign(this.#private, {
+							dict_template: arguments[0],
+							dict: arguments[0],
+							range: arguments[0].length - 1,
+							buffer: "",
+							index: 0,
+							next() {
+								this.index = Math.floor(Math.random() * this.range);
+								this.buffer = this.dict[this.index];
+								this.dict.push(this.dict[this.index]);
+								this.dict[this.index] = undefined;
+								this.dict = this.dict.filter(Boolean);
+								if(this.range === 0) {
+									this.dict = Array.of(...this.dict_template);
+									this.range = this.dict_template.length;
+								} else {
+									this.range--;
+								}
+								return this.buffer;
+							},
+							push(elements) {
+								this.dict_template.push(...elements);
+								return this.dict_template.length;
+							},
+							init() {
+								this.dict = Array.of(...this.dict_template);
+							}
+						});
+						this.#private.init();
+					};
+
+					get next() {
+						return this.#private.next();
+					};
+
+					push(...elements) {
+						return this.#private.push(elements);
+					}
+				};
+
+				let current_challenge_string = "";
+
+				let current_challenge_index = -1;
+
+				const main_array = new RandomArray([
+					"await","break","case","catch","class","const","continue","debugger","default","delete","do","else","enum","export","extends","false","finally","for","function","if","import","in","instanceof","new","null","return","super","switch","this","throw","true","try","typeof","var","void","while","with","yield","let","static","implements","interface","package","private","protected","public",
+				]);
+
+				function setNext({ key }) {
+					if(key === document.getElementById(current_challenge_index).textContent) {
+						if(current_challenge_index !== 0) {
+							document.getElementById(current_challenge_index - 1).classList.remove("right");
+						};
+						document.getElementById(current_challenge_index).classList.remove("wrong", "active");
+						document.getElementById(current_challenge_index).classList.add("right", "done");
+
+						current_challenge_index++;
+
+						if(current_challenge_index === current_challenge_string.length) {
+							reset_challenge({ string: main_array.next });
+						} else {
+							document.getElementById(current_challenge_index).classList.add("active")
+						}
+					} else {
+						document.getElementById(current_challenge_index).classList.add("wrong");
+					}
+				};
+
+				function reset_challenge({ string }) {
+					current_challenge_string = string;
+					current_challenge_index = 0;
+					document.querySelector("span.main").innerHTML = (function() {
+						let html_buffer = "";
+						for(let i = 0; i < current_challenge_string.length; i++) {
+							html_buffer += `<span class="character ${(i === 0)? "active" : ""}" id="${i}">${current_challenge_string[i]}</span>`
+						};
+						return html_buffer;
+					})();
+				};
+
+				addEventListener("keydown", setNext, { passive: true });
+
+				reset_challenge({ string: "zentype" });
+
+			};
+		</script>
+	</body>
+</html>
