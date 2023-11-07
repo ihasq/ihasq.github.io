@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>search redirect</title>
+		<meta charset="utf-8"/>
+		<script type="text/javascript">
+
+			"use strict";
+
+			function getURLParameter() {
+				const paramList = Object.create(null);
+				decodeURI(location.search.slice(1)).split("&").forEach(index => {
+					const pair = index.split("=");
+					paramList[pair[0]] = (pair[1] === ("true" || "false"))? JSON.parse(pair[1].toLowerCase()) : (isNaN(Number(pair[1])))? pair[1] : Number(pair[1])
+				});
+				return paramList;
+			};
+
+			window.location = "https://www.google.co.jp/" + getURLParameter().q;
+
+		</script>
+	</head>
+</html>
