@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8">
+		<title>matz</title>
+		<link rel="stylesheet" type="text/css" href="./css/style.css"/>
+		<link rel="preconnect" href="https://fonts.googleapis.com"/>
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+		<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond&display=swap" rel="stylesheet"/>
+	</head>
+	<body>
+		<div class="topimg">
+			<div class="imgwrap" style="overflow: hidden;">
+				<img src="./img/1.jpeg" class="show" target="top"/>
+				<img src="./img/2.jpeg" target="profile"/>
+				<img src="./img/3.jpeg" target="news"/>
+				<img src="./img/4.jpeg" target="contact"/>
+			</div>
+			<div class="titlewrap">
+				<div id="top" class="show">
+					<img src="./img/name.jpeg" style="width: 64%; margin-left: 18%; margin-right: 18%"/>
+					<h1 target="profile">P R O F I L E</h1>
+					<h1 target="news">N E W S</h1>
+					<h1 target="contact">C O N T A C T</h1>
+				</div>
+				
+				<div id="profile">
+					<h1>P R O F I L E</h1>
+					<h3></h3>
+					<h1 target="top">B A C K</h1>
+				</div>
+				
+				<div id="news">
+					<h1>N E W S</h1>
+					<h3></h3>
+					<h1 target="top">B A C K</h1>
+				</div>
+
+				<div id="contact">
+					<h1>C O N T A C T</h1>
+					<h3></h3>
+					<h1 target="top">B A C K</h1>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			"use strict";
+
+			const $ = query => {
+				return document.querySelector(query);
+			};
+
+			$.all = query => {
+				return document.querySelectorAll(query);
+			};
+
+			$.all("body > div.topimg > .titlewrap > *:not(.show)").forEach(async index => {
+				index.querySelector("h3").innerHTML = await fetch(`./${index.id}.txt`).then(res => res.text());
+			});
+
+			$("body > div.topimg > .titlewrap").addEventListener("click", event => {
+				if(event.target.getAttribute("target")) {
+					$(`body > div.topimg > .imgwrap > img[class='show']`).className = "";
+					$(`body > div.topimg > .titlewrap > div[class='show']`).className = "";
+					$(`body > div.topimg > .imgwrap > img[target='${event.target.getAttribute("target")}']`).className = "show";
+					$(`body > div.topimg > .titlewrap > #${event.target.getAttribute("target")}`).className = "show";
+				};
+			}, { passive: true });
+		</script>
+	</body>
+</html>
