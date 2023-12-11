@@ -5,8 +5,8 @@
 		<title>Document</title>
 	</head>
 	<body>
-		<canvas id="target" style="width: 1920px; height: 1200px"></canvas>
-		<video autoplay hidden></video>
+		<!-- <canvas id="target" style="width: 1920px; height: 1200px"></canvas> -->
+		<video autoplay></video>
 		<script>
 			"use strict";
 
@@ -16,30 +16,27 @@
 			
 			const virtual_video_element = $("video");
 
-			const cvs = $("canvas#target");
-			cvs.height = cvs.clientHeight;
-			cvs.width = cvs.clientWidth;
-			const ctx = cvs.getContext("2d");
+			// const cvs = $("canvas#target");
+			// cvs.height = cvs.clientHeight;
+			// cvs.width = cvs.clientWidth;
+			// const ctx = cvs.getContext("2d");
+			navigator.mediaDevices.getDisplayMedia({
+				video: {
+					frameRate: 60
+				},
+				audio: false,
+			}).then(function(src) {
+				virtual_video_element.srcObject = src
+			});
 
-			(async () => {
+			// virtual_video_element.play();
 
-				virtual_video_element.srcObject = await navigator.mediaDevices.getDisplayMedia({
-					video: {
-						frameRate: 60
-					},
-					audio: false,
-				});
+			// function draw() {
+			// 	requestAnimationFrame(draw);
+			// 	ctx.drawImage(virtual_video_element, 0, 0);
+			// };
 
-				virtual_video_element.play();
-
-				function draw() {
-					requestAnimationFrame(draw);
-					ctx.drawImage(virtual_video_element, 0, 0);
-				};
-
-				requestAnimationFrame(draw);
-
-			})();
+			// requestAnimationFrame(draw);
 
 		</script>
 	</body>
