@@ -1,10 +1,10 @@
 {
 	"editor.tabSize": 4,
-	"editor.fontSize": 13.2,
-	"editor.lineHeight": 1.18,
+	"editor.fontSize": 14,
+	"editor.lineHeight": 1.35,
 	"editor.insertSpaces": false,
 	"editor.fontFamily": "\"JetBrains Mono\", monospace",
-	"workbench.colorTheme": "Default Dark Modern",
+	"workbench.colorTheme": "Monokai",
 	"workbench.tree.indent": 24,
 	"telemetry.telemetryLevel": "off",
 	"remote.autoForwardPorts": false,
@@ -14,4 +14,11 @@
 	"git.confirmSync": false,
 	"git.autofetch": true,
 	"editor.minimap.enabled": false,
+	"git.openRepositoryInParentFolders": "never",
+	"explorer.confirmPasteNative": true,
+	"git.ignoreRebaseWarning": true,
+	"git.path": "usr/bin/git",
+	"workbench.activityBar.location": "top",
+	"terminal.integrated.fontSize": 12,
+	// "workbench.activityBar.location": "hidden"
 }
