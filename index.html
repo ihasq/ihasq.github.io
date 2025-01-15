@@ -1,37 +1,136 @@
-<!--
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<title>ihasq's website</title>
+	
+	<style>
 
-email:		ihasq@ihasq.com
-github:		https://github.com/ihasq
-twitter:	https://twitter.com/ihasq
-nostr:		npub1tcrsspumwynmtp80r9aezp9dzwy4m079xkauccvfvx74fgegaxtsylxlgc
-bitcoin:	bc1qpj4dsfwkz36wcdz3fhjctysr8c05puczwe64rg
+		a {
+			color: #000
+		}
 
-license:	public domain
-source:		https://github.com/ihasq/ihasq.github.io/blob/main/index.html 
+		html, body, pre {
+			width: 100%;
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
 
--->
+		body {
+			position: relative;
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+			>pre, textarea {
+				position: absolute;
+			}
 
-<title>ihasq's website</title>
+			>pre {
+				background-color: #fff;
+				z-index: 1;
+			}
 
+			>textarea {
+				width: 1px;
+				height: 1px;
+				overflow: hidden;
+			}
+		}
+
+		[ihasq] {
+			color: #3233ff
+		}
+
+		[green] {
+			color: #080
+		}
+
+		[blue] {
+			color: #66f
+		}
+
+		[colors] {
+			background-color: #3233ff;
+		}
+
+		[cursor] {
+			outline: 1px solid #000;
+			background-color: #000;
+		}
+	</style>
+
+	<script type="module">
+	
+		document.querySelectorAll`[hidden]`.forEach((t, i) => setTimeout(() => t.hidden = false, (i + (i < 8 ? Math.random() : 72)) * (i < 8 ? 8 : 1) * 16));
+	
+		const UPTIME_M = (Date.now() - 1031788800000) / (60 * 1000), UPTIME_H = Math.floor(UPTIME_M / 60), UPTIME_D = Math.floor(UPTIME_H / 24);
+		document.querySelector`[uptime]`.textContent = `${UPTIME_D} day${UPTIME_D > 1 ? "s" : ""}, ${Math.floor(UPTIME_H % 24)} hour${UPTIME_H > 1 ? "s" : ""}, ${Math.floor(UPTIME_M % 60)} min${UPTIME_M > 1 ? "s" : ""}`;
+	
+		let cursorSwitch = true, cursorBlinkTimeout;
+		const blinkCursor = () => {
+			document.querySelector`[cursor]`.attributeStyleMap.set("background-color", (cursorSwitch = !cursorSwitch) ? "transparent" : "#000");
+			cursorBlinkTimeout = setTimeout(blinkCursor, 30 * (1000 / 60))
+		};
+		window.addEventListener("keypress", ({ code, shiftKey }) => {
+			clearTimeout(cursorBlinkTimeout);
+			cursorSwitch = true;
+			blinkCursor();
+		}, { passive: true });
+
+		document.querySelector`textarea`.addEventListener("input", ({ target: { value } }) => {
+			document.querySelector`[input]`.textContent = value;
+			const { top, left } = document.querySelector`[cursor]`.getBoundingClientRect();
+			document.querySelector`textarea`.attributeStyleMap.set("top", top + "px");
+			document.querySelector`textarea`.attributeStyleMap.set("left", left + "px")
+		}, { passive: true })
+
+		document.querySelector`textarea`.addEventListener("blur", (e) => {
+			document.querySelector`textarea`.focus()
+		}, { passive: true })
+
+		setTimeout(blinkCursor, 30 * (1000 / 60));
+
+		setTimeout(() => document.querySelector`textarea`.focus())
+
+
+	
+	</script>
+</head>
+<body>
 <pre>
-name:     <a href=https://ihasq.com                               >ihasq</a>
-since:    2002
-skill:    software engineering
-project:  <a href=https://github.com/ihasq/libh      target=_blank>libh</a>, workio
-language: js, ts, rs, go, py, c
-editor:   vscode
-laptop:   lenovo 100e 4th gen
-ssh:      debian gnu/linux 12
-desktop:  gnome 43.9
+<b green>ihasq@ihasq.com</b>:~<b blue>$</b> <span hidden>n</span><span hidden>e</span><span hidden>o</span><span hidden>f</span><span hidden>e</span><span hidden>t</span><span hidden>c</span><span hidden>h</span><span hidden>
+<b ihasq>                              .$$.           </b>   <b ihasq>ihasq</b>@<b ihasq>ihasq.com</b>
+<b ihasq>                ;$:  ..;X$$x$Xx;..;.         </b>   ---------------
+<b ihasq>         ;;X   .+Xx+. :xXX$X$xx$$XxXXx.;     </b>   <span hidden><b ihasq>Name</b>: Shuhei Ihara</span>
+<b ihasq>        .Xx$xx   ;:xxx$$Xx:;x$x:;+X$$X;x;    </b>   <span hidden><b ihasq>Country</b>: Japan</span>
+<b ihasq>        .+;xXXXx+xXxXX$$$$$$$$$$$$X+x;;+     </b>   <span hidden><b ihasq>Status</b>: undergraduate</span>
+<b ihasq>  .++X.....X$XxxxX$$; ;XXXxXXX$$XX$$XX$Xx .; </b>   <span hidden><b ihasq>Uptime</b>: <span uptime></span></span>
+<b ihasq>  :X  x..;;+X$$X++xX            +XXXxX$$;::. </b>   <span hidden><b ihasq>Skill</b>: JS, TS, Rust, Go</span>
+<b ihasq>  :XXx;++x;;:;$$xx+  ..:+X+;;:      ::xX;:XX.</b>   <span hidden><b ihasq>Editor</b>: VSCode</span>
+<b ihasq>   ;XX;:;+XxxXXx+++;+XXXX$XXXx.. ::.   $X+XX </b>   <span hidden><b ihasq>Bluesky</b>: <a href="https://bsky.app/profile/ihasq.com" target="_blank">@ihasq.com</a></span>
+<b ihasq> +$xx$x.+$:X$x;;. .+x.  X$$$$+  :;:.:;:x+XXX.</b>   <span hidden><b ihasq>GitHub</b>: <a href="https://github.com/ihasq" target="_blank">@ihasq</a></span>
+<b ihasq>.;xxX$XX$..+;:.      .;;.+Xx.   ;$x++:.$$X+x+</b>   <span hidden><b ihasq>X.com</b>: <a href="https://x.com/ihasq" target="_blank">@ihasq</a></span>
+<b ihasq>xx;$X$X$:x:;:                   ;X$XX;;;;X+. </b>   <span hidden><b ihasq>Mixi2</b>: <a href="https://mixi.social/@ihasq" target="_blank">@ihasq</a></span>
+<b ihasq>;+x$x;;$+;.;..             .:    .+.;+;XX+   </b>   <span hidden><b ihasq>Geartics</b>: <a href="https://geartics.com/ihasq" target="_blank">@ihasq</a></span>
+<b ihasq>:XXxX+$$X+.;:..            .:;+..      XX.   </b>   <span hidden><b ihasq>Zenn</b>: <a href="https://zenn.dev/ihasq" target="_blank">@ihasq</a></span>
+<b ihasq> +.+:x:.++.;....          ;XXX;++      XX    </b>   <span hidden><b ihasq>OS</b>: Linux Mint 22</span>
+<b ihasq>  x+x::.;x..                .$$X:     .      </b>   <span hidden><b ihasq>Host</b>: XPS 13 9310</span>
+<b ihasq>   .+XX$X+.::.          Xx;;+x;+.    .       </b>   <span hidden><b ihasq>DE</b>: MATE 1.26.1</span>
+<b ihasq>   .;+xXX:.:::;.. ..     .Xx;::.;  ...       </b>   <span hidden><b ihasq>Terminal</b>: tmux</span>
+<b ihasq>   .Xx;+X...::;;;;:.          x: ..          </b>   <span hidden><b ihasq>CPU</b>: 11th Gen Intel i7-1185G7 (8) @ 4.800GHz</span>
+<b ihasq>   .x$$x;::...::::;;+;..         +;.         </b>   <span hidden><b ihasq>GPU</b>: Intel TigerLake-LP GT2 [Iris Xe Graphics]</span>
+<b ihasq>   ;+xXX+:;;....::..:::;;++;+.      +x;.     </b>   <span hidden><b ihasq>Memory</b>: 15701MiB</span>
+<b ihasq>   .;;X$x:+xx;:::::::::::::.::++.      ;:.   </b>   
+<b ihasq>     :;xx:+xx;;;xxx+;;:...::.:::          .  </b>   <span hidden colors>                  </span>
+<b ihasq>      +Xx:;+x;;;xxxXXXxXX;:::. .             </b>   <span hidden colors>                  </span>
+<b ihasq>       .X:;+x+;;;+++xxxx;;;x+;;              </b>   
+<b ihasq>        ;::..:.     :++;;++x+;++.            </b>   
+<b ihasq>         .:          ;;;+xxx+x++x.           </b>   
 
-bluesky:  <a href=https://bsky.app/profile/ihasq.com target=_blank>@ihasq.com</a>
-geartics: <a href=https://geartics.com/ihasq         target=_blank>@ihasq</a>
-github:   <a href=https://github.com/ihasq           target=_blank>@ihasq</a>
-mixi:     <a href=https://mixi.social/@ihasq         target=_blank>@ihasq</a>
-x:        <a href=https://x.com/ihasq                target=_blank>@ihasq</a>
-zenn:     <a href=https://zenn.dev/ihasq             target=_blank>@ihasq</a>
 
-WILL COOK HOT JAVASCRIPT FOR HOT FOOD !!!
+<span hidden><b green>ihasq@ihasq.com</b>:~<b blue>$</b> <span input></span><span cursor> </span></span>
 </pre>
+<textarea></textarea>
+</body>
+</html>
