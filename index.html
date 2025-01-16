@@ -66,34 +66,6 @@
 		const UPTIME_M = (Date.now() - 1031788800000) / (60 * 1000), UPTIME_H = Math.floor(UPTIME_M / 60), UPTIME_D = Math.floor(UPTIME_H / 24);
 		document.querySelector`[uptime]`.textContent = `${UPTIME_D} day${UPTIME_D > 1 ? "s" : ""}, ${Math.floor(UPTIME_H % 24)} hour${UPTIME_H > 1 ? "s" : ""}, ${Math.floor(UPTIME_M % 60)} min${UPTIME_M > 1 ? "s" : ""}`;
 	
-		let cursorSwitch = true, cursorBlinkTimeout;
-		const blinkCursor = () => {
-			document.querySelector`[cursor]`.attributeStyleMap.set("background-color", (cursorSwitch = !cursorSwitch) ? "transparent" : "#000");
-			cursorBlinkTimeout = setTimeout(blinkCursor, 30 * (1000 / 60))
-		};
-		window.addEventListener("keypress", ({ code, shiftKey }) => {
-			clearTimeout(cursorBlinkTimeout);
-			cursorSwitch = true;
-			blinkCursor();
-		}, { passive: true });
-
-		document.querySelector`textarea`.addEventListener("input", ({ target: { value } }) => {
-			document.querySelector`[input]`.textContent = value;
-			const { top, left } = document.querySelector`[cursor]`.getBoundingClientRect();
-			document.querySelector`textarea`.attributeStyleMap.set("top", top + "px");
-			document.querySelector`textarea`.attributeStyleMap.set("left", left + "px")
-		}, { passive: true })
-
-		document.querySelector`textarea`.addEventListener("blur", (e) => {
-			document.querySelector`textarea`.focus()
-		}, { passive: true })
-
-		setTimeout(blinkCursor, 30 * (1000 / 60));
-
-		setTimeout(() => document.querySelector`textarea`.focus())
-
-
-	
 	</script>
 </head>
 <body>
@@ -126,9 +98,6 @@
 <b ihasq>       .X:;+x+;;;+++xxxx;;;x+;;              </b>   
 <b ihasq>        ;::..:.     :++;;++x+;++.            </b>   
 <b ihasq>         .:          ;;;+xxx+x++x.           </b>   
-
-
-<span hidden><b green>ihasq@ihasq.com</b>:~<b blue>$</b> <span input></span><span cursor> </span></span>
 </pre>
 <textarea></textarea>
 </body>
