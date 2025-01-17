@@ -19,7 +19,6 @@
 
 		html, body, pre {
 			width: 100%;
-			height: 100%;
 			margin: 0;
 			padding: 0;
 		}
@@ -49,17 +48,23 @@
 	</style>
 
 	<script type="module">
-	
-		document.querySelectorAll`[hidden]`.forEach((t, i) => setTimeout(() => t.hidden = false, (i + (i < 8 ? Math.random() : 72)) * (i < 8 ? 8 : 1) * 16));
-	
-		const UPTIME_M = (Date.now() - 1031788800000) / (60 * 1000), UPTIME_H = Math.floor(UPTIME_M / 60), UPTIME_D = Math.floor(UPTIME_H / 24);
-		document.querySelector`[uptime]`.textContent = `${UPTIME_D} day${UPTIME_D > 1 ? "s" : ""}, ${Math.floor(UPTIME_H % 24)} hour${UPTIME_H > 1 ? "s" : ""}, ${Math.floor(UPTIME_M % 60)} min${UPTIME_M > 1 ? "s" : ""}`;
-	
+		const copy = document.querySelector`[copy]`.cloneNode(true);
+		document.querySelector`[copy]`.removeAttribute("copy")
+		const loop = async () => {
+			document.querySelectorAll`[hidden]`.forEach((t, i) => setTimeout(() => t.removeAttribute("hidden"), (i + (i < 8 ? Math.random() : 72)) * (i < 8 ? 8 : 1) * 16));
+			const UPTIME_M = (Date.now() - 1031788800000) / (60 * 1000), UPTIME_H = Math.floor(UPTIME_M / 60), UPTIME_D = Math.floor(UPTIME_H / 24);
+			document.querySelector`[uptime]`.textContent = `${UPTIME_D} day${UPTIME_D > 1 ? "s" : ""}, ${Math.floor(UPTIME_H % 24)} hour${UPTIME_H > 1 ? "s" : ""}, ${Math.floor(UPTIME_M % 60)} min${UPTIME_M > 1 ? "s" : ""}`;
+			document.querySelector`[uptime]`.removeAttribute("uptime")
+			await new Promise(r => setTimeout(r, 3 * 1000));
+			document.querySelector`pre`.append(...copy.cloneNode(true).childNodes);
+			loop();
+		}
+		loop();
 	</script>
 </head>
 <body>
 <pre>
-<b green>ihasq@ihasq.com</b>:~<b blue>$</b> <span hidden>n</span><span hidden>e</span><span hidden>o</span><span hidden>f</span><span hidden>e</span><span hidden>t</span><span hidden>c</span><span hidden>h</span><span hidden>
+<b green>ihasq@ihasq.com</b>:~<b blue>$</b> <span copy><span hidden>n</span><span hidden>e</span><span hidden>o</span><span hidden>f</span><span hidden>e</span><span hidden>t</span><span hidden>c</span><span hidden>h</span><span hidden>
 <a ihasq href="./ihasq.avif" target="_blank">                              .$$.           </a>   <b ihasq>ihasq</b>@<b ihasq>ihasq.com</b>
 <a ihasq href="./ihasq.avif" target="_blank">                ;$:  ..;X$$x$Xx;..;.         </a>   ---------------
 <a ihasq href="./ihasq.avif" target="_blank">         ;;X   .+Xx+. :xXX$X$xx$$XxXXx.;     </a>   <span hidden><b ihasq>Name</b>: Shuhei Ihara</span>
@@ -87,6 +92,8 @@
 <a ihasq href="./ihasq.avif" target="_blank">       .X:;+x+;;;+++xxxx;;;x+;;              </a>   
 <a ihasq href="./ihasq.avif" target="_blank">        ;::..:.     :++;;++x+;++.            </a>   
 <a ihasq href="./ihasq.avif" target="_blank">         .:          ;;;+xxx+x++x.           </a>   
-</pre>
+
+
+<span hidden><b green>ihasq@ihasq.com</b>:~<b blue>$</b> </span></span></span></pre>
 </body>
 </html>
