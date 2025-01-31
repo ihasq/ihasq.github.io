@@ -48,18 +48,7 @@
 	</style>
 
 	<script type="module">
-		const copy = document.querySelector`[copy]`.cloneNode(true);
-		document.querySelector`[copy]`.removeAttribute("copy")
-		const loop = async () => {
-			document.querySelectorAll`[hidden]`.forEach((t, i) => setTimeout(() => t.removeAttribute("hidden"), (i + (i < 8 ? Math.random() : 72)) * (i < 8 ? 8 : 1) * 16));
-			const UPTIME_M = (Date.now() - 1031788800000) / (60 * 1000), UPTIME_H = Math.floor(UPTIME_M / 60), UPTIME_D = Math.floor(UPTIME_H / 24);
-			document.querySelector`[uptime]`.textContent = `${UPTIME_D} day${UPTIME_D > 1 ? "s" : ""}, ${Math.floor(UPTIME_H % 24)} hour${UPTIME_H > 1 ? "s" : ""}, ${Math.floor(UPTIME_M % 60)} min${UPTIME_M > 1 ? "s" : ""}`;
-			document.querySelector`[uptime]`.removeAttribute("uptime")
-			await new Promise(r => setTimeout(r, 3 * 1000));
-			document.querySelector`pre`.append(...copy.cloneNode(true).childNodes);
-			loop();
-		}
-		loop();
+		document.querySelectorAll`[hidden]`.forEach((t, i) => setTimeout(() => t.removeAttribute("hidden"), (i + (i < 8 ? Math.random() : 72)) * (i < 8 ? 8 : 1) * 16));
 	</script>
 </head>
 <body>
