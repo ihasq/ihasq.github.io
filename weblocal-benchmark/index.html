@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script type="module">
+
+		console.log("fetching module in:", performance.now())
+
+		const { serve } = await import("https://esm.sh/weblocal");
+		const frame = document.createElement("iframe");
+		document.body.append(frame);
+
+		console.log("building server in: ", performance.now())
+
+		frame.src = (await serve(() => new Response("<h1>OK</h1>", { headers: { "Content-Type": "text/html" } }))).url;
+
+		console.log("done in: ", performance.now())
+	</script>
+</head>
+<body>
+</body>
+</html>
