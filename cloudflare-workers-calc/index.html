@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare Workers 料金計算機</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* スライダーの外観をモダンにするためのカスタムスタイル */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #d3d3d3;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #0052da; /* Cloudflare Blue */
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #0052da;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+
+    <div class="container mx-auto px-4 py-8 md:py-12 max-w-5xl">
+
+        <!-- ヘッダー -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900">Cloudflare Workers</h1>
+            <h2 class="text-3xl md:text-4xl font-bold text-blue-600">料金計算機</h2>
+            <p class="mt-4 text-gray-600 max-w-2xl mx-auto">
+                リソース使用量を調整して、Cloudflare Workersの月額料金をリアルタイムで見積もります。
+            </p>
+        </header>
+
+        <!-- プランセレクター -->
+        <div class="flex justify-center mb-10">
+            <div class="inline-flex rounded-lg shadow-sm" role="group">
+                <button type="button" id="free-plan-btn" class="plan-btn bg-blue-600 text-white rounded-l-lg px-6 py-3 text-lg font-semibold border border-blue-600">
+                    無料プラン
+                </button>
+                <button type="button" id="standard-plan-btn" class="plan-btn bg-white text-blue-600 rounded-r-lg px-6 py-3 text-lg font-semibold border border-blue-600">
+                    Standardプラン
+                </button>
+            </div>
+        </div>
+
+        <!-- メインコンテンツ -->
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- 左側: 入力コントロール -->
+            <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-xl shadow-md space-y-8">
+                
+                <!-- リクエスト数 -->
+                <div>
+                    <div class="flex justify-between items-baseline mb-2">
+                        <label for="requests-input" class="text-xl font-semibold text-gray-800">リクエスト</label>
+                        <span class="text-sm text-gray-500">requests / month</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <input type="range" id="requests-slider" class="w-full" min="0" max="100000000" step="100000" value="1000000">
+                        <input type="number" id="requests-input" class="w-48 text-right p-2 border rounded-md focus:ring-2 focus:ring-blue-500" min="0" max="100000000" step="100000" value="1000000">
+                    </div>
+                     <p class="text-xs text-gray-500 mt-2">HTTPリクエストの総数。</p>
+                </div>
+
+                <!-- CPU実行時間 -->
+                <div>
+                    <div class="flex justify-between items-baseline mb-2">
+                        <label for="cpu-input" class="text-xl font-semibold text-gray-800">CPU実行時間</label>
+                        <span class="text-sm text-gray-500">million CPU-ms / month</span>
+                    </div>
+                     <div class="flex items-center space-x-4">
+                        <input type="range" id="cpu-slider" class="w-full" min="0" max="1000" step="1" value="30">
+                        <input type="number" id="cpu-input" class="w-48 text-right p-2 border rounded-md focus:ring-2 focus:ring-blue-500" min="0" max="1000" step="1" value="30">
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">すべてのリクエストで使用されたCPU時間の合計。1 = 100万ミリ秒。</p>
+                </div>
+
+            </div>
+
+            <!-- 右側: 料金サマリー -->
+            <div class="lg:col-span-1 bg-gray-800 text-white p-6 md:p-8 rounded-xl shadow-md flex flex-col">
+                <h3 class="text-2xl font-bold mb-6 border-b border-gray-600 pb-4">月額料金の見積もり</h3>
+                
+                <div class="space-y-4 flex-grow">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">基本料金:</span>
+                        <span id="base-fee-cost" class="font-mono text-lg">$0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">リクエスト料金:</span>
+                        <span id="requests-cost" class="font-mono text-lg">$0.00</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-300">CPU実行時間料金:</span>
+                        <span id="cpu-cost" class="font-mono text-lg">$0.00</span>
+                    </div>
+
+                    <div class="pt-6">
+                        <div id="included-quotas" class="text-sm text-gray-400 space-y-2">
+                            <!-- 動的に挿入 -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t-2 border-blue-400 mt-6 pt-4">
+                    <div class="flex justify-between items-center text-2xl font-bold">
+                        <span>合計:</span>
+                        <span id="total-cost" class="font-mono">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+        
+        <footer class="text-center mt-12 text-sm text-gray-500">
+            <p>
+                この計算機は見積もりです。実際の料金は請求書をご確認ください。
+            </p>
+            <p class="mt-1">
+                料金情報は
+                <a href="https://developers.cloudflare.com/workers/platform/pricing/" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:underline">
+                    Cloudflare Workers公式ドキュメント
+                </a>
+                に基づいています。
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 料金体系データ
+            const PRICING = {
+                free: {
+                    name: '無料プラン',
+                    baseFee: 0,
+                    includedRequests: 1000000,
+                    includedCpuMs: 30, // million ms
+                    requestPricePerMillion: 0, // 無料プランは超過利用不可
+                    cpuPricePerMillionMs: 0,   // 無料プランは超過利用不可
+                    message: "無料プランでは、含まれるクォータを超過するとリクエストがブロックされます。"
+                },
+                standard: {
+                    name: 'Standardプラン',
+                    baseFee: 5,
+                    includedRequests: 10000000,
+                    includedCpuMs: 200, // million ms
+                    requestPricePerMillion: 0.30,
+                    cpuPricePerMillionMs: 2.50,
+                    message: "Standardプランでは基本料金に一定のリソースが含まれます。"
+                }
+            };
+
+            let currentPlan = 'free';
+
+            // DOM要素の取得
+            const freePlanBtn = document.getElementById('free-plan-btn');
+            const standardPlanBtn = document.getElementById('standard-plan-btn');
+            
+            const requestsSlider = document.getElementById('requests-slider');
+            const requestsInput = document.getElementById('requests-input');
+            const cpuSlider = document.getElementById('cpu-slider');
+            const cpuInput = document.getElementById('cpu-input');
+
+            const baseFeeEl = document.getElementById('base-fee-cost');
+            const requestsCostEl = document.getElementById('requests-cost');
+            const cpuCostEl = document.getElementById('cpu-cost');
+            const totalCostEl = document.getElementById('total-cost');
+            const includedQuotasEl = document.getElementById('included-quotas');
+
+            // 数値をフォーマットする関数 (例: 1000000 -> 1,000,000)
+            const formatNumber = (num) => new Intl.NumberFormat('en-US').format(num);
+
+            // 料金計算とUI更新を行うメイン関数
+            function calculateCost() {
+                const plan = PRICING[currentPlan];
+                
+                const requests = parseInt(requestsInput.value, 10);
+                const cpuMs = parseInt(cpuInput.value, 10);
+
+                // 1. 基本料金
+                const baseFee = plan.baseFee;
+
+                // 2. リクエスト料金
+                const chargeableRequests = Math.max(0, requests - plan.includedRequests);
+                const requestsCost = (chargeableRequests / 1000000) * plan.requestPricePerMillion;
+
+                // 3. CPU実行時間料金
+                const chargeableCpuMs = Math.max(0, cpuMs - plan.includedCpuMs);
+                const cpuCost = chargeableCpuMs * plan.cpuPricePerMillionMs;
+
+                // 4. 合計料金
+                const totalCost = baseFee + requestsCost + cpuCost;
+
+                // UIの更新
+                baseFeeEl.textContent = `$${baseFee.toFixed(2)}`;
+                requestsCostEl.textContent = `$${requestsCost.toFixed(2)}`;
+                cpuCostEl.textContent = `$${cpuCost.toFixed(2)}`;
+                totalCostEl.textContent = `$${totalCost.toFixed(2)}`;
+                
+                // 無料枠情報の更新
+                includedQuotasEl.innerHTML = `
+                    <p><strong>${plan.name}に含まれるもの:</strong></p>
+                    <ul>
+                        <li>- ${formatNumber(plan.includedRequests)} リクエスト</li>
+                        <li>- ${formatNumber(plan.includedCpuMs)} million CPU-ms</li>
+                    </ul>
+                    <p class="mt-2 text-xs">${plan.message}</p>
+                `;
+            }
+
+            // プラン切り替え関数
+            function setPlan(planName) {
+                currentPlan = planName;
+                if (planName === 'free') {
+                    freePlanBtn.classList.add('bg-blue-600', 'text-white');
+                    freePlanBtn.classList.remove('bg-white', 'text-blue-600');
+                    standardPlanBtn.classList.add('bg-white', 'text-blue-600');
+                    standardPlanBtn.classList.remove('bg-blue-600', 'text-white');
+                } else {
+                    standardPlanBtn.classList.add('bg-blue-600', 'text-white');
+                    standardPlanBtn.classList.remove('bg-white', 'text-blue-600');
+                    freePlanBtn.classList.add('bg-white', 'text-blue-600');
+                    freePlanBtn.classList.remove('bg-blue-600', 'text-white');
+                }
+                calculateCost();
+            }
+            
+            // イベントリスナーの設定
+            freePlanBtn.addEventListener('click', () => setPlan('free'));
+            standardPlanBtn.addEventListener('click', () => setPlan('standard'));
+
+            requestsSlider.addEventListener('input', (e) => {
+                requestsInput.value = e.target.value;
+                calculateCost();
+            });
+            requestsInput.addEventListener('input', (e) => {
+                requestsSlider.value = e.target.value;
+                calculateCost();
+            });
+
+            cpuSlider.addEventListener('input', (e) => {
+                cpuInput.value = e.target.value;
+                calculateCost();
+            });
+            cpuInput.addEventListener('input', (e) => {
+                cpuSlider.value = e.target.value;
+                calculateCost();
+            });
+
+            // 初期化
+            setPlan('free');
+        });
+    </script>
+</body>
+</html>
