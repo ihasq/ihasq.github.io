@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini 3 Pro Image コスト計算機</title>
+    <!-- Vue.js 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; padding-top: 20px; padding-bottom: 40px; }
+        .card { box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: none; margin-bottom: 20px; }
+        .result-card { transition: transform 0.2s; border: 2px solid transparent; }
+        .result-card.winner { border-color: #198754; background-color: #f0fff4; transform: scale(1.02); }
+        .price-display { font-size: 1.5rem; font-weight: bold; color: #333; }
+        .winner .price-display { color: #198754; }
+        .slider-label { display: flex; justify-content: space-between; font-weight: 500; font-size: 0.9rem; }
+        .badge-custom { font-size: 0.8em; }
+        .details-list { font-size: 0.85rem; color: #666; list-style: none; padding-left: 0; margin-top: 10px; }
+        .details-list li { display: flex; justify-content: space-between; border-bottom: 1px dashed #eee; padding: 4px 0; }
+        .invalid-cache { opacity: 0.6; filter: grayscale(1); }
+    </style>
+</head>
+<body>
+    <div id="app" class="container">
+        <div class="row mb-4">
+            <div class="col-12 text-center">
+                <h1 class="h3">🍌 Nano Banana Pro Preview コスト計算機</h1>
+                <p class="text-muted small">Vertex AI / 2025年 試算レート</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- 入力パラメータ -->
+            <div class="col-lg-5">
+                <div class="card p-3">
+                    <h5 class="card-title mb-3">🛠️ リクエスト設定</h5>
+
+                    <!-- 入力画像 -->
+                    <div class="mb-3">
+                        <div class="slider-label">
+                            <span>入力画像枚数 (560t/枚)</span>
+                            <span class="badge bg-primary">{{ inputImages }} 枚</span>
+                        </div>
+                        <input type="range" class="form-range" min="0" max="50" v-model.number="inputImages">
+                    </div>
+
+                    <!-- 入力テキスト -->
+                    <div class="mb-3">
+                        <div class="slider-label">
+                            <span>入力テキスト (トークン)</span>
+                            <span class="badge bg-primary">{{ formatNumber(inputTextTokens) }} t</span>
+                        </div>
+                        <input type="range" class="form-range" min="0" max="300000" step="100" v-model.number="inputTextTokens">
+                        <div class="input-group input-group-sm mt-1">
+                            <input type="number" class="form-control" v-model.number="inputTextTokens">
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- 出力: 思考テキスト -->
+                    <div class="mb-3">
+                        <div class="slider-label">
+                            <span>思考テキスト (トークン)</span>
+                            <span class="badge bg-info text-dark">{{ formatNumber(thinkingTokens) }} t</span>
+                        </div>
+                        <input type="range" class="form-range" min="0" max="32000" step="100" v-model.number="thinkingTokens">
+                    </div>
+
+                    <!-- 出力: 画像生成 -->
+                    <div class="mb-3">
+                        <div class="slider-label">
+                            <span>出力画像枚数</span>
+                            <span class="badge bg-info text-dark">{{ outputImages }} 枚</span>
+                        </div>
+                        <input type="range" class="form-range" min="0" max="4" v-model.number="outputImages">
+                    </div>
+
+                    <div class="mb-3" v-if="outputImages > 0">
+                        <label class="form-label small">出力画質</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="quality" id="q_std" value="standard" v-model="outputQuality">
+                            <label class="btn btn-outline-secondary btn-sm" for="q_std">標準 (1024px)</label>
+                            
+                            <input type="radio" class="btn-check" name="quality" id="q_high" value="high" v-model="outputQuality">
+                            <label class="btn btn-outline-secondary btn-sm" for="q_high">高画質 (4096px)</label>
+                        </div>
+                    </div>
+
+                    <!-- 出力: テキスト -->
+                    <div class="mb-3">
+                        <div class="slider-label">
+                            <span>出力テキスト (トークン)</span>
+                            <span class="badge bg-info text-dark">{{ formatNumber(outputTextTokens) }} t</span>
+                        </div>
+                        <input type="range" class="form-range" min="0" max="8192" step="50" v-model.number="outputTextTokens">
+                    </div>
+
+                    <hr>
+                    
+                    <!-- キャッシュ前提条件 -->
+                    <div class="mb-3 bg-light p-2 rounded">
+                        <h6 class="small fw-bold">キャッシュ試算の前提</h6>
+                        <div class="mb-2">
+                            <div class="slider-label">
+                                <span class="small">このキャッシュを1時間あたり何回使う？</span>
+                                <span class="badge bg-secondary">{{ cacheReuseCount }} 回</span>
+                            </div>
+                            <input type="range" class="form-range" min="1" max="1000" v-model.number="cacheReuseCount">
+                            <div class="form-text small" style="font-size: 0.75rem;">
+                                ストレージ費用($4.50/1M/h)を利用回数で割って加算します。
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 計算結果 -->
+            <div class="col-lg-7">
+                <div class="card p-3 mb-3 bg-white">
+                    <h5 class="card-title">📊 トークン集計 & レート判定</h5>
+                    <div class="row text-center mt-2">
+                        <div class="col-4 border-end">
+                            <small class="text-muted">総入力トークン</small>
+                            <div class="fw-bold">{{ formatNumber(totalInputTokens) }}</div>
+                        </div>
+                        <div class="col-4 border-end">
+                            <small class="text-muted">適用レート帯</small>
+                            <div :class="{'text-danger': isHighTier, 'text-success': !isHighTier}" class="fw-bold">
+                                {{ isHighTier ? '> 200k' : '≤ 200k' }}
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted">総出力トークン(Text+Think)</small>
+                            <div class="fw-bold">{{ formatNumber(totalOutputTextTokens) }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 比較結果 -->
+                <div class="row">
+                    <!-- 標準入力 -->
+                    <div class="col-md-4">
+                        <div class="card p-3 result-card" :class="{ 'winner': bestOption === 'standard' }">
+                            <h6 class="text-center fw-bold">標準入力</h6>
+                            <div class="text-center price-display">${{ formatPrice(costs.standard.total) }}</div>
+                            <div class="text-center small text-muted mb-2">/ 1リクエスト</div>
+                            <ul class="details-list">
+                                <li><span>入力</span> <span>${{ formatPrice(costs.standard.input) }}</span></li>
+                                <li><span>出力(Text)</span> <span>${{ formatPrice(costs.standard.outputText) }}</span></li>
+                                <li><span>出力(Img)</span> <span>${{ formatPrice(costs.standard.outputImg) }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- バッチ入力 -->
+                    <div class="col-md-4">
+                        <div class="card p-3 result-card" :class="{ 'winner': bestOption === 'batch' }">
+                            <h6 class="text-center fw-bold">バッチ入力</h6>
+                            <div class="text-center price-display">${{ formatPrice(costs.batch.total) }}</div>
+                            <div class="text-center small text-muted mb-2">50% OFF</div>
+                            <ul class="details-list">
+                                <li><span>入力</span> <span>${{ formatPrice(costs.batch.input) }}</span></li>
+                                <li><span>出力(Text)</span> <span>${{ formatPrice(costs.batch.outputText) }}</span></li>
+                                <li><span>出力(Img)</span> <span>${{ formatPrice(costs.batch.outputImg) }}</span></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- キャッシュ入力 -->
+                    <div class="col-md-4">
+                        <div class="card p-3 result-card" :class="{ 'winner': bestOption === 'cache', 'invalid-cache': !canUseCache }">
+                            <h6 class="text-center fw-bold">
+                                コンテキストキャッシュ
+                                <span v-if="!canUseCache" class="badge bg-danger rounded-pill" style="font-size:0.6rem; vertical-align: top;">不可</span>
+                            </h6>
+                            <div v-if="canUseCache">
+                                <div class="text-center price-display">${{ formatPrice(costs.cache.total) }}</div>
+                                <div class="text-center small text-muted mb-2">入力90%OFF + ストレージ</div>
+                                <ul class="details-list">
+                                    <li><span>入力(Cached)</span> <span>${{ formatPrice(costs.cache.input) }}</span></li>
+                                    <li><span>出力(Total)</span> <span>${{ formatPrice(costs.cache.outputTotal) }}</span></li>
+                                    <li><span>ストレージ</span> <span>${{ formatPrice(costs.cache.storage) }}</span></li>
+                                </ul>
+                            </div>
+                            <div v-else class="text-center text-danger mt-3 mb-3 small">
+                                <br>入力トークンが<br>32,000未満のため<br>利用できません
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info small">
+                    <strong>💡 最も安くなる方法:</strong> 
+                    <span v-if="bestOption === 'standard'">標準入力 (バッチ/キャッシュのメリットなし)</span>
+                    <span v-if="bestOption === 'batch'">バッチ入力 (非同期処理が可能なら推奨)</span>
+                    <span v-if="bestOption === 'cache'">コンテキストキャッシュ (1時間あたり{{ cacheReuseCount }}回以上リクエストする場合)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    // 入力パラメータ
+                    inputImages: 1,
+                    inputTextTokens: 1000,
+                    thinkingTokens: 0,
+                    outputImages: 0,
+                    outputQuality: 'standard', // 'standard' or 'high'
+                    outputTextTokens: 500,
+                    
+                    // キャッシュ計算用パラメータ
+                    cacheReuseCount: 10, // 1時間あたりの再利用回数
+                }
+            },
+            computed: {
+                // トークン計算
+                inputImageTokens() {
+                    return this.inputImages * 560;
+                },
+                totalInputTokens() {
+                    return this.inputImageTokens + this.inputTextTokens;
+                },
+                totalOutputTextTokens() {
+                    return this.thinkingTokens + this.outputTextTokens;
+                },
+                outputImageTokensPerImage() {
+                    return this.outputQuality === 'standard' ? 1120 : 2000;
+                },
+                totalOutputImageGenTokens() {
+                    // 画像生成トークンは「出力トークン」としてカウントされるが単価が違う
+                    return this.outputImages * this.outputImageTokensPerImage;
+                },
+
+                // レート判定
+                isHighTier() {
+                    return this.totalInputTokens > 200000;
+                },
+                canUseCache() {
+                    return this.totalInputTokens >= 32000;
+                },
+
+                // 単価定義 (単位: ドル)
+                rates() {
+                    // 100万トークンあたりの単価
+                    const r = {
+                        input: this.isHighTier ? 4.00 : 2.00,
+                        outputText: this.isHighTier ? 18.00 : 12.00,
+                        outputImage: 120.00, // 画像生成専用レート
+                        cacheStorage: 4.50, // per 1M / hour
+                    };
+                    return r;
+                },
+
+                // コスト計算
+                costs() {
+                    const million = 1000000;
+                    
+                    // 1. 標準コスト
+                    const stdInputCost = (this.totalInputTokens / million) * this.rates.input;
+                    const stdOutputTextCost = (this.totalOutputTextTokens / million) * this.rates.outputText;
+                    const stdOutputImgCost = (this.totalOutputImageGenTokens / million) * this.rates.outputImage;
+                    const stdTotal = stdInputCost + stdOutputTextCost + stdOutputImgCost;
+
+                    // 2. バッチコスト (全体50% OFF)
+                    const batchTotal = stdTotal * 0.5;
+
+                    // 3. キャッシュコスト
+                    let cacheTotal = 999999999; // 利用不可時は高額に
+                    let cacheInputCost = 0;
+                    let cacheStorageShare = 0;
+
+                    if (this.canUseCache) {
+                        // キャッシュ時の入力は標準の10%
+                        const cachedRate = this.rates.input * 0.10; 
+                        cacheInputCost = (this.totalInputTokens / million) * cachedRate;
+                        
+                        // ストレージコスト (1時間分のコストを再利用回数で割る)
+                        // コスト = (トークン / 1M * $4.50) / リクエスト数
+                        const hourlyStorage = (this.totalInputTokens / million) * this.rates.cacheStorage;
+                        cacheStorageShare = hourlyStorage / this.cacheReuseCount;
+
+                        // 出力コストは標準と同じ
+                        cacheTotal = cacheInputCost + stdOutputTextCost + stdOutputImgCost + cacheStorageShare;
+                    }
+
+                    return {
+                        standard: {
+                            total: stdTotal,
+                            input: stdInputCost,
+                            outputText: stdOutputTextCost,
+                            outputImg: stdOutputImgCost
+                        },
+                        batch: {
+                            total: batchTotal,
+                            input: stdInputCost * 0.5,
+                            outputText: stdOutputTextCost * 0.5,
+                            outputImg: stdOutputImgCost * 0.5
+                        },
+                        cache: {
+                            total: cacheTotal,
+                            input: cacheInputCost,
+                            outputTotal: stdOutputTextCost + stdOutputImgCost,
+                            storage: cacheStorageShare
+                        }
+                    };
+                },
+
+                bestOption() {
+                    const s = this.costs.standard.total;
+                    const b = this.costs.batch.total;
+                    const c = this.canUseCache ? this.costs.cache.total : Infinity;
+
+                    if (b < s && b < c) return 'batch';
+                    if (c < s && c < b) return 'cache';
+                    return 'standard'; // 通常バッチが一番安いが、条件によってはキャッシュが競合する可能性がある(ただしバッチも50%OFFなので強い)
+                }
+            },
+            methods: {
+                formatNumber(num) {
+                    return new Intl.NumberFormat('ja-JP').format(num);
+                },
+                formatPrice(num) {
+                    // 小数点以下6桁まで表示（微小な金額差を見るため）
+                    if (num === 0) return "0.00";
+                    if (num < 0.01) return num.toFixed(5);
+                    return num.toFixed(4);
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
