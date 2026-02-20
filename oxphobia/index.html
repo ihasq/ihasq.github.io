@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oxc Wasm Bundle Size Verifier (Accurate Mode)</title>
+<title>Oxphobia</title>
 <style>
   :root { --primary: #0366d6; --bg: #f6f8fa; --border: #e1e4e8; --text: #24292e; }
   body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.5; }
   h1 { font-size: 1.8rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0; }
-  .desc { color: #586069; font-size: 0.95rem; margin-bottom: 20px; }
   .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
   input { flex: 1; padding: 10px 15px; font-size: 1rem; border: 1px solid var(--border); border-radius: 6px; outline: none; transition: border-color 0.2s; }
   input:focus { border-color: var(--primary); }
@@ -33,11 +32,7 @@
 </head>
 <body>
 
-<h1>Oxc Wasm Bundle Size Verifier</h1>
-<p class="desc">
-  Oxc WASMでAST解析を行い、<code>process.env.NODE_ENV</code> の条件分岐（DCE）を評価してProduction向け依存のみを解決します。
-  依存関係は並行フェッチにより一括で解決され、最終的にブラウザ内で最適化圧縮を行って実用的なサイズを算出します。
-</p>
+<h1>Oxphobia</h1>
 
 <div class="input-group">
   <input type="text" id="pkgInput" placeholder="パッケージ名 (例: react, lodash-es, vue, lit-html, hstd)" value="hstd">
