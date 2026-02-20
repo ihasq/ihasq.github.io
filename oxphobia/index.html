@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oxc Wasm Bundle Size Verifier (Accurate Mode)</title>
+<style>
+  :root { --primary: #0366d6; --bg: #f6f8fa; --border: #e1e4e8; --text: #24292e; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.5; }
+  h1 { font-size: 1.8rem; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-top: 0; }
+  .desc { color: #586069; font-size: 0.95rem; margin-bottom: 20px; }
+  .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+  input { flex: 1; padding: 10px 15px; font-size: 1rem; border: 1px solid var(--border); border-radius: 6px; outline: none; transition: border-color 0.2s; }
+  input:focus { border-color: var(--primary); }
+  button { padding: 10px 24px; font-size: 1rem; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+  button:hover { background: #005cc5; }
+  button:disabled { background: #94d3a2; cursor: not-allowed; opacity: 0.7; }
+  .panel { background: white; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column; }
+  .panel-header { background: #f1f8ff; border-bottom: 1px solid var(--border); padding: 10px 15px; font-weight: 600; font-size: 0.9rem; color: var(--primary); }
+  .log { height: 400px; overflow-y: auto; padding: 15px; font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 0.85rem; background: #0d1117; color: #c9d1d9; white-space: pre-wrap; word-wrap: break-word; margin: 0; }
+  .log .info { color: #8b949e; }
+  .log .success { color: #7ee787; }
+  .log .error { color: #ff7b72; }
+  .log .fetch { color: #79c0ff; }
+  .log .analyze { color: #d2a8ff; }
+  .result { margin-top: 20px; padding: 20px; background: #dcffe4; border: 1px solid #34d058; border-radius: 6px; color: #176f2c; display: none; }
+  .result h2 { margin: 0 0 10px 0; font-size: 1.4rem; }
+  .result p { margin: 5px 0; font-size: 1.1rem; }
+  .badge { background: #176f2c; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; margin-right: 5px;}
+</style>
+<!-- Terser CDN (Minifier) -->
+<script src="https://cdn.jsdelivr.net/npm/terser@5.31.0/dist/bundle.min.js"></script>
+</head>
+<body>
+
+<h1>Oxc Wasm Bundle Size Verifier</h1>
+<p class="desc">
+  Oxc WASMでAST解析を行い、<code>process.env.NODE_ENV</code> の条件分岐（DCE）を評価してProduction向け依存のみを解決します。
+  依存関係は並行フェッチにより一括で解決され、最終的にブラウザ内で最適化圧縮を行って実用的なサイズを算出します。
+</p>
+
+<div class="input-group">
+  <input type="text" id="pkgInput" placeholder="パッケージ名 (例: react, lodash-es, vue, lit-html, hstd)" value="hstd">
+  <button id="runBtn">バンドル検証を開始</button>
+</div>
+
+<div class="result" id="resultBox">
+  <h2>検証完了</h2>
+  <p>依存関係ファイル数: <strong id="resCount">0</strong></p>
+  <p><span class="badge">Minified</span> サイズ: <strong id="resSize">0</strong> KB (<span id="resBytes">0</span> bytes)</p>
+  <p><span class="badge">Gzipped</span> サイズ: <strong id="resGzipSize">0</strong> KB (<span id="resGzipBytes">0</span> bytes)</p>
+</div>
+
+<div class="panel">
+  <div class="panel-header">実行ログ (Oxc Analyzer & Terser)</div>
+  <pre class="log" id="logBox"></pre>
+</div>
+
+<script type="module">
+  import initWasm, { parseSync } from 'https://cdn.jsdelivr.net/npm/@oxc-parser/wasm@0.60.0/web/oxc_parser_wasm.js';
+
+  const UI = {
+    pkgInput: document.getElementById('pkgInput'),
+    runBtn: document.getElementById('runBtn'),
+    logBox: document.getElementById('logBox'),
+    resultBox: document.getElementById('resultBox'),
+    resCount: document.getElementById('resCount'),
+    resSize: document.getElementById('resSize'),
+    resBytes: document.getElementById('resBytes'),
+  };
+
+  function log(msg, type = 'info') {
+    const span = document.createElement('span');
+    span.className = type;
+    span.textContent = msg + '\n';
+    UI.logBox.appendChild(span);
+    UI.logBox.scrollTop = UI.logBox.scrollHeight;
+  }
+
+  function clearLog() {
+    UI.logBox.innerHTML = '';
+    UI.resultBox.style.display = 'none';
+  }
+
+  function walk(node, visitors) {
+    if (!node || typeof node !== 'object') return;
+    
+    if (node.type && visitors && typeof visitors[node.type] === 'function') {
+      const result = visitors[node.type](node);
+      if (result === false) return;
+    }
+    
+    for (const key in node) {
+      if (key === 'loc' || key === 'range' || key === 'start' || key === 'end') continue;
+      
+      const child = node[key];
+      if (Array.isArray(child)) {
+        for (const c of child) walk(c, visitors);
+      } else {
+        walk(child, visitors);
+      }
+    }
+  }
+
+  function isProcessEnvNodeEnv(n) {
+    if (!n) return false;
+    if (n.type === 'StaticMemberExpression' || n.type === 'MemberExpression') {
+      const propName = n.property ? (n.property.name || n.property.value) : null;
+      if (propName === 'NODE_ENV') {
+        const obj = n.object;
+        if (obj && (obj.type === 'StaticMemberExpression' || obj.type === 'MemberExpression')) {
+          const objProp = obj.property ? (obj.property.name || obj.property.value) : null;
+          if (objProp === 'env') {
+            const root = obj.object;
+            if (root && (root.type === 'Identifier' || root.type === 'IdentifierReference' || root.type === 'IdentifierName')) {
+              if (root.name === 'process') return true;
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  function evaluateEnvCondition(node) {
+    if (!node || node.type !== 'BinaryExpression') return null;
+    const isString = (n) => n.type === 'StringLiteral' || n.type === 'Literal';
+    const getString = (n) => n.value;
+    
+    let envSide = null, strSide = null;
+    
+    if (isProcessEnvNodeEnv(node.left) && isString(node.right)) {
+      envSide = node.left; strSide = node.right;
+    } else if (isProcessEnvNodeEnv(node.right) && isString(node.left)) {
+      envSide = node.right; strSide = node.left;
+    }
+    
+    if (envSide && strSide) {
+      const val = getString(strSide);
+      if (node.operator === '===' || node.operator === '==') return val === 'production';
+      if (node.operator === '!==' || node.operator === '!=') return val !== 'production';
+    }
+    return null;
+  }
+
+  const JSDELIVR_BASE = "https://cdn.jsdelivr.net/npm/";
+  const NODE_BUILTINS = new Set(['assert', 'buffer', 'child_process', 'crypto', 'events', 'fs', 'http', 'https', 'os', 'path', 'process', 'stream', 'url', 'util', 'zlib']);
+
+  function parseBareSpecifier(specifier) {
+    let pkgName = specifier, subpath = "";
+    if (specifier.startsWith("@")) {
+      const parts = specifier.split("/");
+      pkgName = parts[0] + "/" + parts[1];
+      subpath = parts.slice(2).join("/");
+    } else {
+      const parts = specifier.split("/");
+      pkgName = parts[0];
+      subpath = parts.slice(1).join("/");
+    }
+    return { pkgName, subpath };
+  }
+
+  let pkgResolveCache = new Map();
+  let urlCache = new Map();
+  let parsedUrls = new Set();
+  let downloadPromises = new Set();
+  let bundleParts = [];
+
+  async function resolvePackageUrl(specifier) {
+    if (pkgResolveCache.has(specifier)) return pkgResolveCache.get(specifier);
+
+    const { pkgName, subpath } = parseBareSpecifier(specifier);
+    const url = `${JSDELIVR_BASE}${pkgName}/package.json`;
+    log(` package.jsonを確認中: ${pkgName}`, 'info');
+    
+    let pkg = {}, pkgBase = `${JSDELIVR_BASE}${pkgName}/`;
+    try {
+      const res = await fetch(url);
+      if (res.ok) {
+        pkg = await res.json();
+        pkgBase = `${JSDELIVR_BASE}${pkg.name}@${pkg.version}/`;
+      }
+    } catch(e) {}
+
+    function resolveExports(exp) {
+      if (typeof exp === 'string') return exp;
+      if (typeof exp === 'object' && exp !== null) {
+        const conditions = ['browser', 'production', 'import', 'module', 'default'];
+        for (const cond of conditions) {
+          if (cond in exp) {
+            return resolveExports(exp[cond]);
+          }
+        }
+      }
+      return null;
+    }
+
+    // 複数のフォールバック候補を配列に格納
+    let entries = [];
+
+    if (subpath) {
+      if (pkg.exports) {
+        let exportKey = `./${subpath}`;
+        let exp = pkg.exports[exportKey];
+        
+        if (!exp && pkg.exports[`${exportKey}.js`]) {
+          exp = pkg.exports[`${exportKey}.js`];
+        }
+
+        if (!exp) {
+          for (const key of Object.keys(pkg.exports)) {
+            if (key.endsWith('/*') && exportKey.startsWith(key.slice(0, -2))) {
+              const mapped = resolveExports(pkg.exports[key]);
+              if (mapped && mapped.endsWith('/*')) {
+                const suffix = exportKey.slice(key.length - 2);
+                exp = mapped.slice(0, -2) + suffix;
+                break;
+              }
+            }
+          }
+        }
+
+        if (exp) {
+          const subEntry = resolveExports(exp);
+          if (subEntry) entries.push(subEntry);
+        }
+      }
+      entries.push(subpath);
+    } else {
+      if (pkg.exports) {
+        let exp = pkg.exports['.'] !== undefined ? pkg.exports['.'] : pkg.exports;
+        let resolved = resolveExports(exp);
+        if (resolved) entries.push(resolved);
+      }
+      
+      // パッケージのルートのフォールバック候補
+      if (pkg.module) entries.push(pkg.module);
+      if (typeof pkg.browser === 'string') entries.push(pkg.browser);
+      if (pkg.unpkg) entries.push(pkg.unpkg);
+      if (pkg.jsdelivr) entries.push(pkg.jsdelivr);
+      if (pkg.main) entries.push(pkg.main);
+      entries.push("index.js");
+    }
+    
+    // 重複を排除して完全なURLにする
+    let targetUrls = [...new Set(entries)].filter(Boolean).map(entry => {
+      if (entry.startsWith("./")) entry = entry.slice(2);
+      return new URL(entry, pkgBase).href;
+    });
+
+    pkgResolveCache.set(specifier, targetUrls);
+    return targetUrls; // 候補の配列を返す
+  }
+
+  // 複数の候補を受け取り、最初に成功したものを返す
+  async function fetchFile(urls) {
+    if (!Array.isArray(urls)) urls = [urls];
+    const tryFetch = async (u) => { const r = await fetch(u); return r.ok ? r : null; };
+    
+    for (const url of urls) {
+      let res = await tryFetch(url);
+      if (!res && !url.match(/\.(js|mjs|cjs|ts)$/)) {
+          res = await tryFetch(url + '.js');
+          if (!res) res = await tryFetch(url + '.mjs');
+          if (!res) res = await tryFetch(url + '.cjs');
+          if (!res) res = await tryFetch(url + '/index.js');
+          if (!res) res = await tryFetch(url + '/index.mjs');
+      }
+      if (res) return { code: await res.text(), finalUrl: res.url }; 
+    }
+    throw new Error(`Fetch failed for: ${urls[0]}`);
+  }
+
+  async function resolveUrl(url, baseUrl) {
+    if (url.startsWith('http')) return [url];
+    if (NODE_BUILTINS.has(url) || url.startsWith('node:')) return null;
+    const cacheKey = baseUrl ? `${baseUrl}:${url}` : url;
+    if (urlCache.has(cacheKey)) return urlCache.get(cacheKey);
+    
+    let targetUrls = (url.startsWith('.') || url.startsWith('/')) 
+      ? [new URL(url, baseUrl).href] 
+      : await resolvePackageUrl(url);
+      
+    urlCache.set(cacheKey, targetUrls);
+    return targetUrls;
+  }
+
+  function enqueueFile(url, baseUrl) {
+    const p = (async () => {
+      const targetUrls = await resolveUrl(url, baseUrl);
+      if (!targetUrls || targetUrls.length === 0) return;
+      
+      const primaryUrl = targetUrls[0];
+      if (parsedUrls.has(primaryUrl)) return;
+      parsedUrls.add(primaryUrl);
+
+      const hasFallback = targetUrls.length > 1;
+      log(` ダウンロード中: ${primaryUrl}${hasFallback ? ' (フォールバック候補あり)' : ''}`, 'fetch');
+      
+      let fetched;
+      try {
+        fetched = await fetchFile(targetUrls);
+      } catch(e) { 
+        log(` 取得失敗: ${primaryUrl} (${e.message})`, 'error');
+        return; 
+      }
+
+      const { code, finalUrl } = fetched;
+      
+      if (finalUrl !== primaryUrl) {
+        if (parsedUrls.has(finalUrl)) return;
+        parsedUrls.add(finalUrl);
+        // フォールバックによって別のファイルが解決された場合に通知
+        if (hasFallback) {
+          log(`  -> 代替ファイルの解決に成功: ${finalUrl}`, 'success');
+        }
+      }
+
+      log(` AST解析中: ${finalUrl}`, 'analyze');
+      let astResult;
+      try {
+        astResult = parseSync(code, { sourceFilename: finalUrl, sourceType: "module" });
+      } catch (e1) {
+        try { astResult = parseSync(code, { sourceFilename: finalUrl, sourceType: "script" }); } 
+        catch (e2) {
+          bundleParts.push(code); return;
+        }
+      }
+
+      const deps = new Set();
+      
+      const extractStringValue = (node) => {
+        if (!node) return null;
+        if (node.type === 'StringLiteral') return node.value;
+        if (node.type === 'Literal' && typeof node.value === 'string') return node.value;
+        return null;
+      };
+      
+      const isTargetIdentifier = (n, name) => n && (n.type === 'Identifier' || n.type === 'IdentifierReference' || n.type === 'IdentifierName') && n.name === name;
+
+      const visitors = {
+        IfStatement(node) {
+          const isProd = evaluateEnvCondition(node.test);
+          if (isProd === true) { walk(node.consequent, visitors); return false; } 
+          else if (isProd === false) { if (node.alternate) walk(node.alternate, visitors); return false; }
+        },
+        ConditionalExpression(node) {
+          const isProd = evaluateEnvCondition(node.test);
+          if (isProd === true) { walk(node.consequent, visitors); return false; } 
+          else if (isProd === false) { walk(node.alternate, visitors); return false; }
+        },
+        ImportDeclaration(node) { const val = extractStringValue(node.source); if (val) deps.add(val); },
+        ExportNamedDeclaration(node) { const val = extractStringValue(node.source); if (val) deps.add(val); },
+        ExportAllDeclaration(node) { const val = extractStringValue(node.source); if (val) deps.add(val); },
+        ImportExpression(node) { const val = extractStringValue(node.source); if (val) deps.add(val); },
+        CallExpression(node) {
+          let isRequire = isTargetIdentifier(node.callee, 'require');
+          let isImportScripts = isTargetIdentifier(node.callee, 'importScripts');
+          if (!isRequire && !isImportScripts && node.callee && (node.callee.type === 'StaticMemberExpression' || node.callee.type === 'MemberExpression')) {
+            if (!node.callee.computed) {
+              if (isTargetIdentifier(node.callee.property, 'require')) isRequire = true;
+              if (isTargetIdentifier(node.callee.property, 'importScripts')) isImportScripts = true;
+            }
+          }
+          if (isRequire && node.arguments?.length > 0) {
+            const val = extractStringValue(node.arguments[0]); if (val) deps.add(val);
+          } else if (isImportScripts && node.arguments?.length > 0) {
+            node.arguments.forEach(arg => { const val = extractStringValue(arg); if (val) deps.add(val); });
+          }
+        }
+      };
+
+      walk(astResult.program, visitors);
+
+      if (deps.size > 0) log(`  => 依存関係を抽出 (${deps.size}件): ${Array.from(deps).join(', ')}`, 'info');
+
+      bundleParts.push(code);
+
+      for (const dep of deps) {
+        enqueueFile(dep, finalUrl);
+      }
+    })();
+
+    downloadPromises.add(p);
+    
+    p.then(() => {
+      downloadPromises.delete(p);
+    }).catch((e) => {
+      log(` 予期せぬエラー: ${e.message}`, 'error');
+      downloadPromises.delete(p);
+    });
+  }
+
+  async function getGzippedSize(code) {
+    try {
+      if (typeof CompressionStream === 'undefined') return new Blob([code]).size;
+      const stream = new Blob([code], { type: 'text/plain' }).stream();
+      const compressedStream = stream.pipeThrough(new CompressionStream('gzip'));
+      const reader = compressedStream.getReader();
+      let size = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        size += value.length;
+      }
+      return size;
+    } catch(e) {
+      return new Blob([code]).size;
+    }
+  }
+
+  let wasmInitialized = false;
+
+  UI.runBtn.addEventListener('click', async () => {
+    const pkg = UI.pkgInput.value.trim();
+    if (!pkg) return;
+
+    UI.runBtn.disabled = true; UI.runBtn.textContent = '処理中...';
+    clearLog(); 
+    
+    pkgResolveCache.clear();
+    urlCache.clear();
+    parsedUrls.clear(); 
+    downloadPromises.clear();
+    bundleParts = [];
+
+    try {
+      if (!wasmInitialized) {
+        log(` Oxc WASMモジュールを初期化しています...`, 'info');
+        await initWasm('https://cdn.jsdelivr.net/npm/@oxc-parser/wasm@0.60.0/web/oxc_parser_wasm_bg.wasm');
+        wasmInitialized = true;
+        log(` Oxc WASM初期化完了！`, 'success');
+      }
+
+      log(` パッケージの検証を開始: ${pkg}`, 'success');
+      
+      // 【修正箇所】
+      // パッケージ名をそのままenqueueFileに渡すことで、内部でresolvePackageUrlが呼ばれ、
+      // 用意されているフォールバック候補(配列)がfetchFileに正しく渡されて404時の自動回避が働きます。
+      enqueueFile(pkg, null);
+
+      while (downloadPromises.size > 0) {
+        await Promise.all(Array.from(downloadPromises));
+      }
+
+      log(` Oxcによる依存関係解決が完了しました。`, 'success');
+      
+      let minifiedCode = "";
+      if (window.Terser) {
+        log(` TerserによるMinifyと最適化を実行中...`, 'analyze');
+        let hasError = false;
+        const minifiedParts = [];
+        
+        for (let i = 0; i < bundleParts.length; i++) {
+          const code = bundleParts[i];
+          try {
+            const minifyResult = await window.Terser.minify(code, {
+              compress: { global_defs: { 'process.env.NODE_ENV': 'production' }, dead_code: true },
+              format: { comments: false },
+              module: true
+            });
+            minifiedParts.push(minifyResult.code || code);
+          } catch(e) {
+            log(`  -> 一部ファイルのMinifyに失敗しました。元のサイズを使用します。`, 'error');
+            minifiedParts.push(code);
+            hasError = true;
+          }
+        }
+        
+        minifiedCode = minifiedParts.join('\n');
+        if (!hasError) log(` Minify完了`, 'success');
+        
+      } else {
+        minifiedCode = bundleParts.join('\n');
+      }
+
+      log(` Gzipサイズを計測中...`, 'analyze');
+      const minifiedBytes = new Blob([minifiedCode]).size;
+      const gzipBytes = await getGzippedSize(minifiedCode);
+      
+      UI.resCount.textContent = bundleParts.length;
+      UI.resSize.textContent = (minifiedBytes / 1024).toFixed(2);
+      UI.resBytes.textContent = minifiedBytes.toLocaleString();
+      document.getElementById('resGzipSize').textContent = (gzipBytes / 1024).toFixed(2);
+      document.getElementById('resGzipBytes').textContent = gzipBytes.toLocaleString();
+      
+      UI.resultBox.style.display = 'block';
+    } catch (e) {
+      log(` ${e.message}`, 'error');
+    } finally {
+      UI.runBtn.disabled = false; UI.runBtn.textContent = 'バンドル検証を開始';
+    }
+  });
+</script>
+</body>
+</html>
